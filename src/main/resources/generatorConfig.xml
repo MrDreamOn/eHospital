@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+  
+<generatorConfiguration>
+    <!-- 配置文件路径 -->
+    <properties resource="generatorConfig.properties"/>
+  	
+  	<classPathEntry location="${jdbc.path}" />
+  	 
+    <context id="hospital-register" targetRuntime="MyBatis3">
+    	<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
+  
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="false"/>
+            <property name="javaFileEncoding" value="UTF-8"/>
+        </commentGenerator>
+  
+        <jdbcConnection driverClass="${jdbc.driver}"
+                        connectionURL="${jdbc.url}"
+                        userId="${jdbc.username}"
+                        password="${jdbc.password}">
+        </jdbcConnection>
+  
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+  
+        <javaModelGenerator targetPackage="${target.package}.bean" targetProject="${target.project}">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="${target.package}.sqlmap" targetProject="${target.project}/src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<javaClientGenerator type="XMLMAPPER" targetPackage="${target.package}.dao" targetProject="${target.project}">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+  
+        <!-- <table tableName="test_user" >
+            <generatedKey column="id" sqlStatement="Mysql" type="post" identity="true"/>
+        </table> -->
+        
+        <table schema="${jdbc.username}" tableName="t_user" domainObjectName="User">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table>
+ 		
+ 		<!-- <table schema="${jdbc.username}" tableName="t_role" domainObjectName="Role">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table> -->
+ 		
+ 		<!-- <table schema="${jdbc.username}" tableName="t_permission" domainObjectName="Permission">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table> -->
+ 		
+ 		<!-- <table schema="${jdbc.username}" tableName="t_department" domainObjectName="Department">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table>
+ 		
+ 		<table schema="${jdbc.username}" tableName="t_doctor" domainObjectName="Doctor">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table>
+ 		
+ 		<table schema="${jdbc.username}" tableName="t_hospital" domainObjectName="Hospital">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table>
+ 		
+ 		<table schema="${jdbc.username}" tableName="t_log" domainObjectName="Log">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table>
+ 		
+ 		<table schema="${jdbc.username}" tableName="t_patient" domainObjectName="Patient">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table>
+ 		
+ 		<table schema="${jdbc.username}" tableName="t_schedule" domainObjectName="Schedule">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table>
+  
+  		<table schema="${jdbc.username}" tableName="t_subscription" domainObjectName="Subscription">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table> -->
+    </context>
+</generatorConfiguration>
