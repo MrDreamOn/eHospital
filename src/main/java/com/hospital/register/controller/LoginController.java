@@ -6,7 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +47,22 @@ public class LoginController {
     }
 	
 	@RequestMapping(value="/login",method=RequestMethod.POST)
-	public String login(String userName,String password) {
+	public String login(String userName,String password,
+            HttpSession session) {
 		logger.info("login,userName={}",userName);
-        return "index";
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
+        		userName, password);
+        Subject subject = SecurityUtils.getSubject();
+        try {
+            //在这里掉到了shiro中进行登录校验,如果权限校验没有通过就不会往下走
+            subject.login(usernamePasswordToken); //完成登录
+            User user = (User)subject.getPrincipal();
+            session.setAttribute("user", user);
+            return "index";
+        }
+        catch (Exception e) {
+            return "login";//返回登录页面
+        }
     }
 	
 	@RequestMapping("/logout")

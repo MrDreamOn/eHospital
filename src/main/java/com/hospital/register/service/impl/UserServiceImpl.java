@@ -2,10 +2,12 @@ package com.hospital.register.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.hospital.register.bean.User;
@@ -35,6 +37,15 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User findUserByName(String userName) {
+		if(StringUtils.isEmpty(userName)) {
+			return new User();
+		}
+		UserExample example = new UserExample();
+		example.createCriteria().andUserNameEqualTo(userName.trim());
+		List<User> results = userMapper.selectByExample(example);
+		if(!CollectionUtils.isEmpty(results)) {
+			return results.get(0);
+		}
 		return new User();
 	}
 

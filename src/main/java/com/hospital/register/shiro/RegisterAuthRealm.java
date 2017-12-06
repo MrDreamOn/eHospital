@@ -69,8 +69,8 @@ public class RegisterAuthRealm extends AuthorizingRealm {
 		logger.info("认证doGetAuthenticationInfo!");
 		try {
             UsernamePasswordToken utoken = (UsernamePasswordToken)token;//获取用户输入的token
-            String username = utoken.getUsername();
-            User user = userService.findUserByName(username);
+            String userName = utoken.getUsername();
+            User user = userService.findUserByName(userName);
             if (user != null) {
                 // 若存在，将此用户存放到登录认证info中，无需自己做密码对比，Shiro会为我们进行密码对比校验
                 return new SimpleAuthenticationInfo(user, user.getPassword(),this.getClass().getName());//放入shiro.调用CredentialsMatcher检验密码
