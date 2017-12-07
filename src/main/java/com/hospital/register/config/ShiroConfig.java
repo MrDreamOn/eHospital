@@ -38,6 +38,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/login*", "anon"); //表示可以匿名访问,anon表示不需要拦截
         filterChainDefinitionMap.put("/loginUser", "anon");
         filterChainDefinitionMap.put("/user/hasUser*", "anon");
+        filterChainDefinitionMap.put("/static*", "anon");
         filterChainDefinitionMap.put("/error*", "anon");
         filterChainDefinitionMap.put("/index*", "authc");
         filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问

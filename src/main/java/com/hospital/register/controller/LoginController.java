@@ -58,12 +58,28 @@ public class LoginController {
             subject.login(usernamePasswordToken); //完成登录
             User user = (User)subject.getPrincipal();
             session.setAttribute("user", user);
-            return "index";
+            
+            return "redirect:/index";
         }
         catch (Exception e) {
             return "login";//返回登录页面
         }
     }
+	
+	@RequiresRoles("admin")
+	@RequestMapping(value="/index")
+	public String index() {
+		logger.info("index");
+        return "index";
+    }
+	
+	
+	@RequestMapping(value="/indexAdmin")
+	public String indexAdmin() {
+		logger.info("indexAdmin");
+        return "index_admin";
+    }
+	
 	
 	@RequestMapping("/logout")
 	@ResponseBody
