@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.tomcat.util.http.fileupload.ThresholdingOutputStream;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -21,6 +22,7 @@ import com.hospital.register.exception.EhospitalServiceException;
 import com.hospital.register.service.PatientService;
 import com.hospital.register.service.WechatService;
 import com.hospital.register.util.AddSHA1;
+import com.hospital.register.util.DateUtil;
 import com.hospital.register.util.ResponseCode;
 import com.hospital.register.util.WechatUtils;
 import com.hospital.register.vo.WeChatRequestVo;
@@ -71,7 +73,7 @@ public class WechatServiceImpl implements WechatService {
                                     /**
                                      * 发送图文消息
                                      */
-                                    return  result;
+                                    return  responseNewsMessage(map);
                                 }
                             } else {
                                 //新增微信关注用户
@@ -164,5 +166,32 @@ public class WechatServiceImpl implements WechatService {
         logger.info("微信公众号请求处理完成");
         return requestVo;
     }
+    
+    
+   private static String responseNewsMessage(Map<String,String> map){
+       Document doc = DocumentHelper.createDocument();
+       Element root = doc.addElement("xml");
+       root.addElement("ToUserName").addCDATA(map.get("FromUserName"));
+       root.addElement("FromUserName").addCDATA(map.get("ToUserName"));
+       root.addElement("CreateTime").addCDATA(DateUtil.getCurrentDate());
+       root.addElement("MsgType").addCDATA("news");
+       root.addElement("ArticleCount").addCDATA("2");
+       Element artElement = root.addElement("Articles");
+       Element itemElement = artElement.addElement("item");
+       itemElement.addElement("Title").addCDATA("欢迎关注XX医院微信公众号");
+       itemElement.addElement("Description").addCDATA("点击立即注册");
+       itemElement.addElement("PicUrl").addCDATA("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1512845011827&di=6cd456f77c595eb5fc42fd28ecb62d4b&imgtype=0&src=http%3A%2F%2Fnpimg.39.net%2FPictureLib%2FA%2Ff76%2F20150122%2Forg_380277.jpg");
+       itemElement.addElement("Url").addCDATA("www.badu.com");
+       
+       
+       logger.info(String.format("需要返回给微信的message数据是:data={}", doc.getRootElement().asXML().trim()));
+       return doc.getRootElement().asXML();
+   }
 
+   public static void main(String[] args) {
+       Map<String,String> map = new HashMap<String, String>();
+       map.put("FromUserName", "caiwei");
+       map.put("ToUserName", "wei");
+    System.out.println(WechatServiceImpl.responseNewsMessage(map));
+}
 }

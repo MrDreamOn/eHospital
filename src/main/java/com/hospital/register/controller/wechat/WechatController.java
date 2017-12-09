@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.hospital.register.exception.EhospitalServiceException;
+import com.hospital.register.service.PatientService;
 import com.hospital.register.service.WechatService;
 import com.hospital.register.util.ResponseCode;
 import com.hospital.register.vo.WeChatRequestVo;
@@ -24,6 +26,9 @@ public class WechatController {
 
     @Autowired
     private WechatService  wechatService;
+    
+    @Autowired
+    private PatientService  patientService;
     
     @RequestMapping("/handleRequest")
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -47,5 +52,12 @@ public class WechatController {
             printWriter.print(result);
             response.flushBuffer();
         }
+    }
+    
+    @RequestMapping(value="/test",method=RequestMethod.GET)
+    public String login() {
+        int isReg = patientService.addFollowers("123");
+        logger.info("请求处理返回数据:{}", isReg);
+        return "login";
     }
 }
