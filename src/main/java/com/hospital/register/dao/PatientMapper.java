@@ -93,4 +93,6 @@ public interface PatientMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(Patient record);
+    
+    
 }

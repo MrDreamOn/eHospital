@@ -1,19 +1,10 @@
 package com.hospital.register.controller.wechat;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.hospital.register.exception.EhospitalServiceException;
 import com.hospital.register.service.WechatService;
 import com.hospital.register.util.ResponseCode;
-import com.hospital.register.util.WechatUtils;
-import com.hospital.register.vo.PublicNoConfigVo;
 import com.hospital.register.vo.WeChatRequestVo;
 
 @Controller

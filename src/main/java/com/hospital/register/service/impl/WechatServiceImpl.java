@@ -14,18 +14,25 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hospital.register.exception.EhospitalServiceException;
+import com.hospital.register.service.PatientService;
 import com.hospital.register.service.WechatService;
 import com.hospital.register.util.AddSHA1;
 import com.hospital.register.util.ResponseCode;
 import com.hospital.register.util.WechatUtils;
 import com.hospital.register.vo.WeChatRequestVo;
 
+@Service
 public class WechatServiceImpl implements WechatService {
 
     private static final Logger logger = LoggerFactory.getLogger(WechatServiceImpl.class);
 
+    @Autowired
+    private PatientService  patientService;
+    
     /**
      * 处理微信异步请求
      * @see com.hospital.register.service.WechatService#handleRequest(javax.servlet.http.HttpServletRequest)
@@ -47,31 +54,29 @@ public class WechatServiceImpl implements WechatService {
                 if ("GET".equals(requestVo.getMethod())) {
                     return requestVo.getEchostr();
                 } else if ("POST".equals(requestVo.getMethod())) {
-                    // 标记是否需要更新用户最后登录时间(暂定取消关注不更新)
-                    boolean isUpdate = true;
                     request.setCharacterEncoding("UTF-8");
                     // 解析请求数据
                     Map<String, String> map = requestVo.getMsgContentMap();
-
-                    // EhUserInfo cus = ehUserInfoService.qryByOpenId(map.get("FromUserName"), hospitalId);
-
+                    String openid = map.get("FromUserName");
+                    boolean isSub = patientService.isSubscribe(openid);
                     String result = null;
                     // 事件消息
                     if ("event".equals(map.get("MsgType"))) {
                         // 关注事件
                         if ("subscribe".equals(map.get("Event"))) {
                             //查询当前关注的用户是否已经存在.不存在就新建，存在则更新数据库
-                            /*if (cus != null) {
-                                ehUserInfoService.updateCustomerInfoStatus(cus.getUid(), "subscribe", hospitalId);
+                            if (isSub) {
+                                boolean isReg = patientService.isRegister(openid);
+                                if(!isReg){
+                                    /**
+                                     * 发送图文消息
+                                     */
+                                    return  result;
+                                }
                             } else {
                                 //新增微信关注用户
-                                ehUserInfoService.addWechatSubscribeUser(map, hospitalId);
-                            }*/
-                        }
-                        if ("unsubscribe".equals(map.get("Event"))) {// 取消关注事件
-                            // ehUserInfoService.updateCustomerInfoStatus(cus.getUid(), "unsubscribe", hospitalId);
-                            isUpdate = false;
-                            return result;
+                                patientService.addFollowers(openid);
+                            }
                         }
 
                     }

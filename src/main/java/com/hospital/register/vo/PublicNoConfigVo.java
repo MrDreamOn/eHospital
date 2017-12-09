@@ -1,8 +1,5 @@
 package com.hospital.register.vo;
 
-import java.util.Date;
-import java.util.List;
-
 public class PublicNoConfigVo {
 
     public static final String APPID = "";
@@ -21,16 +18,25 @@ public class PublicNoConfigVo {
     
     public static final String TOKEN= "witon";
 
-    private Date createDate;
-
-    private Date updateDate;
-
     
     public static final String MD5KEY="";
     
    
     
     public static final String CERTIFYNAME="";
+
+
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+    
     
 	
 }
