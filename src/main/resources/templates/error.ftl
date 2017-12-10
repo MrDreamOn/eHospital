@@ -3,7 +3,7 @@
 <html lang="en">  
   
 <body>  
-    Something wrong: ${status} ${error}  
+    Something wrong: ${status} ${error}
 </body>  
   
 </html>

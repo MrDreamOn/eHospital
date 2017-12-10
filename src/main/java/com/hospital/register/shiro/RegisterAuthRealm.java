@@ -52,7 +52,7 @@ public class RegisterAuthRealm extends AuthorizingRealm {
             	List<Permission> permissions = permissionService.getPermissionsByRoleId(role.getRoleId());
                 if (permissions.size() > 0) {
                     for (Permission permission : permissions) {
-                    	info.addStringPermission(permission.getUrl());//将权限放入shiro中.
+                    	info.addStringPermission(permission.getPermission());//将权限放入shiro中.
                     }
                 }
             }
