@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hospital.register.bean.User;
 import com.hospital.register.context.Context;
@@ -67,6 +70,7 @@ public class LoginController {
     }
 	
 	@RequiresRoles("admin")
+	@RequiresPermissions(value={"/index","modify"}, logical= Logical.OR)
 	@RequestMapping(value="/index")
 	public String index() {
 		logger.info("index");
@@ -81,17 +85,16 @@ public class LoginController {
     }
 	
 	
+	@RequestMapping("/403")
+    public String unauthorizedRole(){
+        logger.info("------没有权限-------");
+        return "error";
+    }
+	
 	@RequestMapping("/logout")
 	@ResponseBody
 	public Object logout() {
 		logger.info("logout");
-		User user = new User();
-		user.setUserName("admin");
-		user.setPassword(PasswordHelper.encryptPassword(user.getUserName(),"!qazXsw2"));
-		user.setCreateTime(new Date());
-		user.setUpdateTime(new Date());
-		System.out.println("password:"+user.getPassword());
-		userService.addUser(user);
         return Context.USER_MAP;
     }
 	

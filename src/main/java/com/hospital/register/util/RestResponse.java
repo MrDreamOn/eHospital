@@ -40,6 +40,13 @@ public class RestResponse extends HashMap<String, Object> {
 		response.setData(data);
 		return response;
 	}
+	
+	public static RestResponse successResWithTokenData(final Object data,final String token) {
+		final RestResponse response = new RestResponse(true);
+		response.setData(data);
+		response.setToken(token);
+		return response;
+	}
 
 	public static RestResponse errorRes(final String error) {
 		final RestResponse response = new RestResponse(false);
@@ -69,5 +76,9 @@ public class RestResponse extends HashMap<String, Object> {
 
 	public String getErrorMsg() {
 		return (String) get("error");
+	}
+	
+	public void setToken(final String token) {
+		put("token", token);
 	}
 }
