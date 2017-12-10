@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.tomcat.util.http.fileupload.ThresholdingOutputStream;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -61,7 +60,6 @@ public class WechatServiceImpl implements WechatService {
                     Map<String, String> map = requestVo.getMsgContentMap();
                     String openid = map.get("FromUserName");
                     boolean isSub = patientService.isSubscribe(openid);
-                    String result = null;
                     // 事件消息
                     if ("event".equals(map.get("MsgType"))) {
                         // 关注事件

@@ -68,7 +68,10 @@ public class PatientServiceImpl  implements PatientService {
 
     @Override
     public int updateRegister(Patient patient) {
-        return 0;
+        PatientExample example  = new PatientExample();
+        Criteria criteria = example.createCriteria();
+        criteria.andOpenIdEqualTo(patient.getOpenId()); 
+        return patientMapper.updateByExampleSelective(patient, example);
     }
 
 }
