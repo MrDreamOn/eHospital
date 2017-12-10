@@ -95,13 +95,6 @@ public class LoginController {
 	@ResponseBody
 	public Object logout() {
 		logger.info("logout");
-		User user = new User();
-		user.setUserName("admin");
-		user.setPassword(PasswordHelper.encryptPassword(user.getUserName(),"!qazXsw2"));
-		user.setCreateTime(new Date());
-		user.setUpdateTime(new Date());
-		System.out.println("password:"+user.getPassword());
-		userService.addUser(user);
         return Context.USER_MAP;
     }
 	
