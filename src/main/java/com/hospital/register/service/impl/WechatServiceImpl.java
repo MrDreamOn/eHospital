@@ -3,6 +3,7 @@ package com.hospital.register.service.impl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +16,16 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.hospital.register.bean.User;
 import com.hospital.register.exception.EhospitalServiceException;
-import com.hospital.register.service.PatientService;
+import com.hospital.register.service.UserService;
 import com.hospital.register.service.WechatService;
 import com.hospital.register.util.AddSHA1;
 import com.hospital.register.util.DateUtil;
+import com.hospital.register.util.PasswordHelper;
 import com.hospital.register.util.ResponseCode;
 import com.hospital.register.util.WechatUtils;
 import com.hospital.register.vo.WeChatRequestVo;
@@ -31,8 +35,14 @@ public class WechatServiceImpl implements WechatService {
 
     private static final Logger logger = LoggerFactory.getLogger(WechatServiceImpl.class);
 
+    @Value("${user.default.password:!qazXsw2}")
+    private String defaultPassword;
+    
+    @Value("${user.default.userName:游客}")
+    private String defaultUserName;
+    
     @Autowired
-    private PatientService  patientService;
+    private UserService  userService;
     
     /**
      * 处理微信异步请求
@@ -59,14 +69,14 @@ public class WechatServiceImpl implements WechatService {
                     // 解析请求数据
                     Map<String, String> map = requestVo.getMsgContentMap();
                     String openid = map.get("FromUserName");
-                    boolean isSub = patientService.isSubscribe(openid);
+                    boolean isSub = userService.isSubscribe(openid);
                     // 事件消息
                     if ("event".equals(map.get("MsgType"))) {
                         // 关注事件
                         if ("subscribe".equals(map.get("Event"))) {
                             //查询当前关注的用户是否已经存在.不存在就新建，存在则更新数据库
                             if (isSub) {
-                                boolean isReg = patientService.isRegister(openid);
+                                boolean isReg = userService.isRegister(openid);
                                 if(!isReg){
                                     /**
                                      * 发送图文消息
@@ -75,7 +85,13 @@ public class WechatServiceImpl implements WechatService {
                                 }
                             } else {
                                 //新增微信关注用户
-                                patientService.addFollowers(openid);
+                                User userVO = new User();
+                                userVO.setUserName(defaultUserName);
+                                userVO.setPassword(PasswordHelper.encryptPassword(userVO.getUserName(),defaultPassword));
+                                userVO.setOpenId(openid);
+                                userVO.setCreateTime(new Date());
+                                userVO.setUpdateTime(new Date());
+                                userService.addUser(userVO);
                             }
                         }
 

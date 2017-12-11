@@ -22,7 +22,7 @@ import com.hospital.register.shiro.RegisterCredentialsMatcher;
  * @author paul
  *
  */
-@Configuration
+
 public class ShiroConfig {
 
 	@Bean(name="ehCacheManager")

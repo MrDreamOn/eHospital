@@ -18,4 +18,10 @@ public interface UserService {
     User findUserByName(String userName);
     
     List<User> findUsersByCondition(UserExample example);
+    
+    boolean isSubscribe(String openid);
+    
+    boolean isRegister(String openid);
+    
+    int updateRegister(User user);
 }

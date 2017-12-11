@@ -92,7 +92,7 @@ public interface ScheduleMapper {
      *
      * @mbg.generated
      */
-    int updateSchByPrimaryKey(Schedule record);
+    int updateByPrimaryKey(Schedule record);
     
     
     int updateScheduleNo(Integer scheduleId);

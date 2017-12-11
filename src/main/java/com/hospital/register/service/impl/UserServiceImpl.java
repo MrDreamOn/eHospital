@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.PageHelper;
+import com.hospital.register.bean.Patient;
+import com.hospital.register.bean.PatientExample;
+import com.hospital.register.bean.PatientExample.Criteria;
 import com.hospital.register.bean.User;
 import com.hospital.register.bean.UserExample;
 import com.hospital.register.dao.UserMapper;
@@ -57,5 +60,50 @@ public class UserServiceImpl implements UserService{
 		}
 		return results;
 	}
+
+	/**
+	 * 判断是否关注
+	 * @see com.hospital.register.service.UserService#isSubscribe(java.lang.String)
+	 */
+    @Override
+    public boolean isSubscribe(String openid) {
+
+        UserExample example = new UserExample();
+        example.createCriteria().andOpenIdEqualTo(openid);     
+        List<User> list = userMapper.selectByExample(example);
+        if(list.size() == 0){
+            //未关注
+            return false;
+        } 
+        return true;
+    }
+
+    @Override
+    public boolean isRegister(String openid) {
+        UserExample example = new UserExample();
+        example.createCriteria().andOpenIdEqualTo(openid);     
+        List<User> list = userMapper.selectByExample(example);
+        if(list.size() ==0 ){
+            return false;
+        }
+        
+        if(list.size() > 1 ){
+            return false;
+        }
+        
+        User user = list.get(0);
+        if(StringUtils.hasText(user.getRealName())){
+            return true;
+        }
+        
+        return false;
+    }
+
+    @Override
+    public int updateRegister(User user) {
+        UserExample example = new UserExample();
+        example.createCriteria().andOpenIdEqualTo(user.getOpenId());
+        return userMapper.updateByExampleSelective(user, example);
+    }
 	
 }

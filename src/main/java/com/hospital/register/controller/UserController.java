@@ -78,7 +78,7 @@ public class UserController {
 			user.setOpenId(openId);
 			user.setCreateTime(new Date());
 			user.setUpdateTime(new Date());
-			userService.addUser(user);
+			userService.updateRegister(user);
 			return RestResponse.successResWithTokenData("", "YGdykliy_+@124LK/");
 		} catch (Exception e) {
 			logger.error("用户注册出错,e={}",e);
