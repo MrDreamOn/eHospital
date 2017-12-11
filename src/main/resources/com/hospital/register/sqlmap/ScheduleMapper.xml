@@ -398,7 +398,7 @@
     where schedule_id = #{scheduleId,jdbcType=INTEGER}
   </update>
   
-    <update id="updateByPrimaryKey" parameterType="java.lang.Integer">
+    <update id="updateScheduleNo" parameterType="java.lang.Integer">
     	update t_schedule set clinic_no = clinic_no-1 where clinic_no >=1 and schedule_id  =  #{scheduleId,jdbcType=INTEGER}
     </update>
 </mapper>
