@@ -4,11 +4,6 @@ import com.hospital.register.bean.Subscription;
 
 public interface SubscriptionService {
 
-    
-    public String checkSubscription(Subscription subscription);
-    
-    
-    
-    public String addSubscription(Subscription subscription);
+    public String addSubscription(Subscription subscription,String openid);
 
 }

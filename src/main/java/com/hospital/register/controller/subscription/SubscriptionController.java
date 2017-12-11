@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hospital.register.bean.Subscription;
 import com.hospital.register.controller.register.RegisterController;
+import com.hospital.register.exception.EhospitalServiceException;
 import com.hospital.register.service.SubscriptionService;
+import com.hospital.register.util.DateUtil;
 import com.hospital.register.util.RestResponse;
 
 /**
@@ -29,10 +32,24 @@ public class SubscriptionController {
 
     @RequestMapping(value = "/addSubcription", method = RequestMethod.POST)
     @ResponseBody
-    public RestResponse addSubcription(String openId,String scheduleId, String realName, int sex,String telephone){      
+    public RestResponse addSubcription(String openId,int scheduleId, String patientName, String patientBirthday,int patientSex,String patientPhone){      
         logger.info("addSubcription,openId={}", openId);
-        
-        return RestResponse.successResWithTokenData("", "YGdykliy_+@124LK/");
+        Subscription subVO = new Subscription();
+        subVO.setScheduleId(scheduleId);
+        subVO.setPatientName(patientName);
+        subVO.setPatientBirthday(DateUtil.parseDate(patientBirthday));
+        subVO.setPatientSex(patientSex);
+        subVO.setPatientPhone(patientPhone);
+        try{
+            subscriptionService.addSubscription(subVO,openId);
+        }catch(EhospitalServiceException eh){
+            logger.info("addSubcription error,message={}", eh.getMessage()); 
+            RestResponse.errorRes(eh.getMessage());
+        }catch(Exception e){
+            logger.info("addSubcription error,message={}", e.getMessage()); 
+            RestResponse.errorRes("系统异常,请稍后再试");
+        }
+        return RestResponse.successResWithTokenData("预约成功", "YGdykliy_+@124LK/");
         
         
     }

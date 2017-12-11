@@ -72,4 +72,5 @@ public interface SubscriptionMapper {
 	 * @mbg.generated
 	 */
 	int updateByPrimaryKey(Subscription record);
+	
 }

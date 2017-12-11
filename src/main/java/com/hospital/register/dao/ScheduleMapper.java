@@ -96,4 +96,6 @@ public interface ScheduleMapper {
     
     
     int updateScheduleNo(Integer scheduleId);
+    
+    int checkScheduleNo(Integer scheduleId);
 }
