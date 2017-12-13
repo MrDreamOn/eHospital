@@ -1,10 +1,8 @@
 package com.hospital.register.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,7 @@ public class ScheduleController {
 	RestResponse getSchedule() {
 		logger.info("getSchedule info");
 		ScheduleExample examples = new ScheduleExample();
-		examples.createCriteria().andClinicDateBetween(DateUtil.formatDateToDate(new Date()), DateUtil.getCurBeforDate(-7))
+		examples.createCriteria().andClinicDateBetween(DateUtil.formatDateToDate(new Date()), DateUtil.getCurBeforDate(-6))
 		.andClinicStatusEqualTo(1);
 		List<Schedule> schedules = scheduleService.getScheduleInfo(examples);
 		return RestResponse.successResWithData(schedules);

@@ -515,6 +515,19 @@ public class DateUtil {
     }
     
     /**
+     * 获取后一天的日期
+     * @param date
+     * @return
+     */
+    public static Date getAfterDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        date = calendar.getTime();
+        return date;
+    }
+    
+    /**
      * 获取某一天是一星期中的星期几
      * @param pTime
      * @return

@@ -1,7 +1,6 @@
 package com.hospital.register.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +20,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hospital.register.bean.User;
 import com.hospital.register.context.Context;
 import com.hospital.register.service.UserService;
-import com.hospital.register.util.PasswordHelper;
 
 @Controller
 public class LoginController {
