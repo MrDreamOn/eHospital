@@ -2,8 +2,8 @@
 <html>
 <head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
 <title>hospital</title>
-<link href=/static/css/app.01c30b454ab5dcee60b2ed6838e8fab0.css rel=stylesheet><
-/head>
+<link href=/static/css/app.01c30b454ab5dcee60b2ed6838e8fab0.css rel=stylesheet>
+</head>
 <body>
 <div id=app></div>
 <script type=text/javascript src=/static/js/manifest.4cd61942e09cbb18d85e.js></script>

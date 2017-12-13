@@ -10,9 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.PageHelper;
-import com.hospital.register.bean.Patient;
-import com.hospital.register.bean.PatientExample;
-import com.hospital.register.bean.PatientExample.Criteria;
 import com.hospital.register.bean.User;
 import com.hospital.register.bean.UserExample;
 import com.hospital.register.dao.UserMapper;

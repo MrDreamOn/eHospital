@@ -8,4 +8,6 @@ import com.hospital.register.bean.ScheduleExample;
 public interface ScheduleService {
 
 	List<Schedule> getScheduleInfo(ScheduleExample examples);
+	
+	void addSchedules(List<Schedule> schedules) throws Exception;
 }

@@ -47,11 +47,11 @@
             <generatedKey column="id" sqlStatement="Mysql" type="post" identity="true"/>
         </table> -->
         
-     <!--    <table schema="${jdbc.username}" tableName="t_user" domainObjectName="User">
+        <table schema="${jdbc.username}" tableName="t_user" domainObjectName="User">
  			<property name="useActualColumnNames" value="false" />
  			<property name="constructorBased" value="true" />
  			<property name="ignoreQualifiersAtRuntime" value="true" />
- 		</table> -->
+ 		</table>
  		
  		<!-- <table schema="${jdbc.username}" tableName="t_role" domainObjectName="Role">
  			<property name="useActualColumnNames" value="false" />
@@ -95,18 +95,24 @@
  			<property name="useActualColumnNames" value="false" />
  			<property name="constructorBased" value="true" />
  			<property name="ignoreQualifiersAtRuntime" value="true" />
- 		</table>
+ 		</table>-->
   
-  		<table schema="${jdbc.username}" tableName="t_subscription" domainObjectName="Subscription">
+  		<!-- <table schema="${jdbc.username}" tableName="t_subscription" domainObjectName="Subscription">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table>  -->
+ 		
+ 		<table schema="${jdbc.username}" tableName="t_token" domainObjectName="Token">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table> 
+ 		
+ 		<!-- <table schema="${jdbc.username}" tableName="t_patient" domainObjectName="Patient">
  			<property name="useActualColumnNames" value="false" />
  			<property name="constructorBased" value="true" />
  			<property name="ignoreQualifiersAtRuntime" value="true" />
  		</table> -->
- 		
- 		<table schema="${jdbc.username}" tableName="t_patient" domainObjectName="Patient">
- 			<property name="useActualColumnNames" value="false" />
- 			<property name="constructorBased" value="true" />
- 			<property name="ignoreQualifiersAtRuntime" value="true" />
- 		</table>
     </context>
 </generatorConfiguration>
