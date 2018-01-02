@@ -16,7 +16,7 @@ public class UserVO {
     
     private Date brithday;
     
-    private String status;
+    private String status;//1-预约 2-挂号
     
     private int subscriptionId;
 

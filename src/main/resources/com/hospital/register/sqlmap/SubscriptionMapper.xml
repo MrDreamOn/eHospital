@@ -11,7 +11,7 @@
       <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="schedule_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="subscription_date" javaType="java.util.Date" jdbcType="DATE" />
-      <arg column="subscription_time" javaType="java.util.Date" jdbcType="TIME" />
+      <arg column="subscription_time" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="subscription_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="subscription_fee" javaType="java.lang.Long" jdbcType="DECIMAL" />
       <arg column="patient_name" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -154,7 +154,7 @@
       patient_sex, patient_phone, create_time, 
       update_time)
     values (#{subscriptionId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{scheduleId,jdbcType=INTEGER}, 
-      #{subscriptionDate,jdbcType=DATE}, #{subscriptionTime,jdbcType=TIME}, #{subscriptionStatus,jdbcType=INTEGER}, 
+      #{subscriptionDate,jdbcType=DATE}, #{subscriptionTime,jdbcType=VARCHAR}, #{subscriptionStatus,jdbcType=INTEGER}, 
       #{subscriptionFee,jdbcType=DECIMAL}, #{patientName,jdbcType=VARCHAR}, #{patientBirthday,jdbcType=DATE}, 
       #{patientSex,jdbcType=INTEGER}, #{patientPhone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
@@ -220,7 +220,7 @@
         #{subscriptionDate,jdbcType=DATE},
       </if>
       <if test="subscriptionTime != null">
-        #{subscriptionTime,jdbcType=TIME},
+        #{subscriptionTime,jdbcType=VARCHAR},
       </if>
       <if test="subscriptionStatus != null">
         #{subscriptionStatus,jdbcType=INTEGER},
@@ -278,7 +278,7 @@
         subscription_date = #{record.subscriptionDate,jdbcType=DATE},
       </if>
       <if test="record.subscriptionTime != null">
-        subscription_time = #{record.subscriptionTime,jdbcType=TIME},
+        subscription_time = #{record.subscriptionTime,jdbcType=VARCHAR},
       </if>
       <if test="record.subscriptionStatus != null">
         subscription_status = #{record.subscriptionStatus,jdbcType=INTEGER},
@@ -319,7 +319,7 @@
       user_id = #{record.userId,jdbcType=INTEGER},
       schedule_id = #{record.scheduleId,jdbcType=INTEGER},
       subscription_date = #{record.subscriptionDate,jdbcType=DATE},
-      subscription_time = #{record.subscriptionTime,jdbcType=TIME},
+      subscription_time = #{record.subscriptionTime,jdbcType=VARCHAR},
       subscription_status = #{record.subscriptionStatus,jdbcType=INTEGER},
       subscription_fee = #{record.subscriptionFee,jdbcType=DECIMAL},
       patient_name = #{record.patientName,jdbcType=VARCHAR},
@@ -349,7 +349,7 @@
         subscription_date = #{subscriptionDate,jdbcType=DATE},
       </if>
       <if test="subscriptionTime != null">
-        subscription_time = #{subscriptionTime,jdbcType=TIME},
+        subscription_time = #{subscriptionTime,jdbcType=VARCHAR},
       </if>
       <if test="subscriptionStatus != null">
         subscription_status = #{subscriptionStatus,jdbcType=INTEGER},
@@ -387,7 +387,7 @@
     set user_id = #{userId,jdbcType=INTEGER},
       schedule_id = #{scheduleId,jdbcType=INTEGER},
       subscription_date = #{subscriptionDate,jdbcType=DATE},
-      subscription_time = #{subscriptionTime,jdbcType=TIME},
+      subscription_time = #{subscriptionTime,jdbcType=VARCHAR},
       subscription_status = #{subscriptionStatus,jdbcType=INTEGER},
       subscription_fee = #{subscriptionFee,jdbcType=DECIMAL},
       patient_name = #{patientName,jdbcType=VARCHAR},

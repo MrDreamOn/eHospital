@@ -12,7 +12,7 @@
       <arg column="doctor_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="department_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="clinic_date" javaType="java.util.Date" jdbcType="DATE" />
-      <arg column="clinic_time" javaType="java.util.Date" jdbcType="TIME" />
+      <arg column="clinic_time" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="clinic_week" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="clinic_type" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="clinic_status" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -153,7 +153,7 @@
       clinic_no, clinic_fee, create_time, 
       update_time)
     values (#{scheduleId,jdbcType=INTEGER}, #{hospitalId,jdbcType=INTEGER}, #{doctorId,jdbcType=INTEGER}, 
-      #{departmentId,jdbcType=INTEGER}, #{clinicDate,jdbcType=DATE}, #{clinicTime,jdbcType=TIME}, 
+      #{departmentId,jdbcType=INTEGER}, #{clinicDate,jdbcType=DATE}, #{clinicTime,jdbcType=VARCHAR}, 
       #{clinicWeek,jdbcType=INTEGER}, #{clinicType,jdbcType=INTEGER}, #{clinicStatus,jdbcType=INTEGER}, 
       #{clinicNo,jdbcType=INTEGER}, #{clinicFee,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
@@ -222,7 +222,7 @@
         #{clinicDate,jdbcType=DATE},
       </if>
       <if test="clinicTime != null">
-        #{clinicTime,jdbcType=TIME},
+        #{clinicTime,jdbcType=VARCHAR},
       </if>
       <if test="clinicWeek != null">
         #{clinicWeek,jdbcType=INTEGER},
@@ -280,7 +280,7 @@
         clinic_date = #{record.clinicDate,jdbcType=DATE},
       </if>
       <if test="record.clinicTime != null">
-        clinic_time = #{record.clinicTime,jdbcType=TIME},
+        clinic_time = #{record.clinicTime,jdbcType=VARCHAR},
       </if>
       <if test="record.clinicWeek != null">
         clinic_week = #{record.clinicWeek,jdbcType=INTEGER},
@@ -319,7 +319,7 @@
       doctor_id = #{record.doctorId,jdbcType=INTEGER},
       department_id = #{record.departmentId,jdbcType=INTEGER},
       clinic_date = #{record.clinicDate,jdbcType=DATE},
-      clinic_time = #{record.clinicTime,jdbcType=TIME},
+      clinic_time = #{record.clinicTime,jdbcType=VARCHAR},
       clinic_week = #{record.clinicWeek,jdbcType=INTEGER},
       clinic_type = #{record.clinicType,jdbcType=INTEGER},
       clinic_status = #{record.clinicStatus,jdbcType=INTEGER},
@@ -351,7 +351,7 @@
         clinic_date = #{clinicDate,jdbcType=DATE},
       </if>
       <if test="clinicTime != null">
-        clinic_time = #{clinicTime,jdbcType=TIME},
+        clinic_time = #{clinicTime,jdbcType=VARCHAR},
       </if>
       <if test="clinicWeek != null">
         clinic_week = #{clinicWeek,jdbcType=INTEGER},
@@ -387,7 +387,7 @@
       doctor_id = #{doctorId,jdbcType=INTEGER},
       department_id = #{departmentId,jdbcType=INTEGER},
       clinic_date = #{clinicDate,jdbcType=DATE},
-      clinic_time = #{clinicTime,jdbcType=TIME},
+      clinic_time = #{clinicTime,jdbcType=VARCHAR},
       clinic_week = #{clinicWeek,jdbcType=INTEGER},
       clinic_type = #{clinicType,jdbcType=INTEGER},
       clinic_status = #{clinicStatus,jdbcType=INTEGER},
@@ -402,7 +402,7 @@
     	update t_schedule set clinic_no = clinic_no-1 where clinic_no >=1 and schedule_id  =  #{scheduleId,jdbcType=INTEGER}
     </update>
     
-     <update id="checkScheduleNo" parameterType="java.lang.Integer">
+     <select  id="checkScheduleNo" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     	select clinic_no from t_schedule where schedule_id  =  #{scheduleId,jdbcType=INTEGER} and clinic_no > 0;
-    </update>
+     </select>
 </mapper>

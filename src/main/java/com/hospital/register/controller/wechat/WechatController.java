@@ -67,14 +67,14 @@ public class WechatController {
     
     @RequestMapping(value="/test",method=RequestMethod.GET)
     public String login() {
-        User userVO = new User();
-        userVO.setUserName(defaultUserName);
-        userVO.setPassword(PasswordHelper.encryptPassword(userVO.getUserName(),defaultPassword));
-        userVO.setOpenId("caiwe_test");
-        userVO.setCreateTime(new Date());
-        userVO.setUpdateTime(new Date());
-        int isReg = userService.addUser(userVO);
-        logger.info("请求处理返回数据:{}", isReg);
+//        User userVO = new User();
+//        userVO.setUserName(defaultUserName);
+//        userVO.setPassword(PasswordHelper.encryptPassword(userVO.getUserName(),defaultPassword));
+//        userVO.setOpenId("caiwe_test");
+//        userVO.setCreateTime(new Date());
+//        userVO.setUpdateTime(new Date());
+//        int isReg = userService.addUser(userVO);
+//        logger.info("请求处理返回数据:{}", isReg);
         return "login";
     }
 }

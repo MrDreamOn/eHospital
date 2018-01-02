@@ -57,7 +57,7 @@ public class Schedule implements Serializable {
      *
      * @mbg.generated
      */
-    private Date clinicTime;
+    private String clinicTime;
 
     /**
      *
@@ -136,7 +136,7 @@ public class Schedule implements Serializable {
      *
      * @mbg.generated
      */
-    public Schedule(Integer scheduleId, Integer hospitalId, Integer doctorId, Integer departmentId, Date clinicDate, Date clinicTime, Integer clinicWeek, Integer clinicType, Integer clinicStatus, Integer clinicNo, BigDecimal clinicFee, Date createTime, Date updateTime) {
+    public Schedule(Integer scheduleId, Integer hospitalId, Integer doctorId, Integer departmentId, Date clinicDate, String clinicTime, Integer clinicWeek, Integer clinicType, Integer clinicStatus, Integer clinicNo, BigDecimal clinicFee, Date createTime, Date updateTime) {
         this.scheduleId = scheduleId;
         this.hospitalId = hospitalId;
         this.doctorId = doctorId;
@@ -290,7 +290,7 @@ public class Schedule implements Serializable {
      *
      * @mbg.generated
      */
-    public Date getClinicTime() {
+    public String getClinicTime() {
         return clinicTime;
     }
 
@@ -302,7 +302,7 @@ public class Schedule implements Serializable {
      *
      * @mbg.generated
      */
-    public void setClinicTime(Date clinicTime) {
+    public void setClinicTime(String clinicTime) {
         this.clinicTime = clinicTime;
     }
 

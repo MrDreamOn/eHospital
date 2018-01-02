@@ -16,10 +16,15 @@ public interface SubscriptionService {
     
     public List<Subscription>  querySubscription(SubscriptionExample  example);
     
+    //新增会员并当天挂号
     public void addUserAndSubscription(UserVO userVO);
     
+    //会员当天挂号
     public void userAddSubscription(UserVO userVO);
     
+    //预约转挂号
     public void updateSubscription(UserVO userVO);
+    
+    public List<Subscription>  querySubscriptionByPage(SubscriptionExample  example,int currentPage,int pageSize);
 
 }

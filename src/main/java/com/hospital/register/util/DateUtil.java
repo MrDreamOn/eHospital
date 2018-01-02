@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -482,19 +483,19 @@ public class DateUtil {
     
     public static String getWeekByDate(int i) {
         switch (i) {
-            case 1:
-                return "星期日";
-            case 2:
-                return "星期一";
-            case 3:
-                return "星期二";
-            case 4:
-                return "星期三";
-            case 5:
-                return "星期四";
-            case 6:
-                return "星期五";
             case 7:
+                return "星期日";
+            case 1:
+                return "星期一";
+            case 2:
+                return "星期二";
+            case 3:
+                return "星期三";
+            case 4:
+                return "星期四";
+            case 5:
+                return "星期五";
+            case 6:
                 return "星期六";
             default:
                 return "";
@@ -721,9 +722,17 @@ public class DateUtil {
         return date;
     }
     
-    public static void main(String[] args) {
-        Calendar calendar =Calendar.getInstance();
-        calendar.setTime(parseDate("2013/10/19 8:57:06"));
-        System.out.println(formatDateTime(calendar.getTime()));
+    
+    public static String parseGMTDate(String date){
+        date = date.replace("GMT", "").replaceAll("\\(.*\\)", "");
+        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
+        Date dateTrans = null;
+        try {
+            dateTrans = format.parse(date);
+            return new SimpleDateFormat("yyyy-MM-dd").format(dateTrans);
+        } catch (ParseException e) {
+            
+        }
+        return null;
     }
 }

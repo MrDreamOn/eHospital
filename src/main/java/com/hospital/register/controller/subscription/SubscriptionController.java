@@ -3,6 +3,7 @@ package com.hospital.register.controller.subscription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,6 +50,15 @@ public class SubscriptionController {
             logger.info("addSubcription error,message={}", e.getMessage()); 
             RestResponse.errorRes("系统异常,请稍后再试");
         }
+        return RestResponse.successResWithTokenData("预约成功", "YGdykliy_+@124LK/");
+        
+        
+    }
+    
+    @RequestMapping(value = "/addTest", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResponse Rest(String openId){
+         System.out.println("openId:"+openId); 
         return RestResponse.successResWithTokenData("预约成功", "YGdykliy_+@124LK/");
         
         
