@@ -24,4 +24,6 @@ public interface UserService {
     boolean isRegister(String openid);
     
     int updateRegister(User user);
+    
+    int updateUserByPrimaryKey(User user);
 }

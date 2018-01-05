@@ -483,7 +483,7 @@ public class DateUtil {
     
     public static String getWeekByDate(int i) {
         switch (i) {
-            case 7:
+            case 0:
                 return "星期日";
             case 1:
                 return "星期一";
@@ -719,7 +719,7 @@ public class DateUtil {
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_MONTH, num);
         date = calendar.getTime();
-        return date;
+        return formatDateToDate(date);
     }
     
     
@@ -735,4 +735,10 @@ public class DateUtil {
         }
         return null;
     }
+    
+    public static String parseDateToString(Date date){
+        DateFormat format = new SimpleDateFormat("MM-dd");
+        return format.format(date);
+    }
+
 }

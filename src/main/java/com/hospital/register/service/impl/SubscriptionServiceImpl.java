@@ -253,4 +253,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         PageHelper.startPage(currentPage, pageSize);
         return subscriptionMapper.selectByExample(example);
     }
+
+    @Override
+    public int updateSubStatus(Subscription sub) {
+        return subscriptionMapper.updateByPrimaryKeySelective(sub);
+    }
 }

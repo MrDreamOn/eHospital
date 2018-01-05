@@ -102,5 +102,10 @@ public class UserServiceImpl implements UserService{
         example.createCriteria().andOpenIdEqualTo(user.getOpenId());
         return userMapper.updateByExampleSelective(user, example);
     }
+
+    @Override
+    public int updateUserByPrimaryKey(User user) {
+        return userMapper.updateByPrimaryKey(user);
+    }
 	
 }
