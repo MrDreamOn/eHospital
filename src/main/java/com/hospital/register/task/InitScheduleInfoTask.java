@@ -3,6 +3,7 @@ package com.hospital.register.task;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -59,9 +60,21 @@ public class InitScheduleInfoTask {
 		schedule.setClinicWeek(dayOfWeek);
 		schedule.setCreateTime(new Date());
 		schedule.setUpdateTime(new Date());
+		Random random = new Random();
+		if(random.nextBoolean()){
+		    schedule.setClinicTime("上午");
+		}else{
+		    schedule.setClinicTime("下午");  
+		}
 		schedules.add(schedule);
 		return schedules;
 	}
+	
+	public static void main(String[] args) {
+	    Random random = new Random();
+	    
+	    System.out.println( random.nextBoolean());
+    }
 
 
 }

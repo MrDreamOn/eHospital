@@ -3,6 +3,8 @@ package com.hospital.register.controller.manager;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hospital.register.annotation.TokenAccess;
 import com.hospital.register.bean.Schedule;
 import com.hospital.register.bean.ScheduleExample;
 import com.hospital.register.bean.Subscription;
@@ -53,7 +56,10 @@ public class QueryRegisterController {
      */
     @RequestMapping(value = "/queryTelphone", method = RequestMethod.POST)
     @ResponseBody
-    public RestResponse queryTelphone(String telPhone) {
+    @TokenAccess
+    public RestResponse queryTelphone(HttpServletRequest request) {
+        try{
+        String telPhone = request.getParameter("telPhone");
         logger.info("queryUser,telPhone={}", telPhone);
         RegisterVO vo = new RegisterVO();
         UserExample example = new UserExample();
@@ -72,8 +78,12 @@ public class QueryRegisterController {
         List<Subscription> sublist = subscriptionService.querySubscription(subExample);
         IdcardInfoExtractor idcardInfoExtractor = new IdcardInfoExtractor(user.getIdCard());
         if (sublist.size() == 0) {
-            criteria.andSubscriptionStatusEqualTo(2);
-            List<Subscription> sublist2 = subscriptionService.querySubscription(subExample);
+            SubscriptionExample subExample2 = new SubscriptionExample();
+            Criteria criteria2 = subExample2.createCriteria();
+            criteria2.andSubscriptionStatusEqualTo(1);
+            criteria2.andSubscriptionDateEqualTo(DateUtil.formatDateToDate(new Date()));
+            criteria2.andUserIdEqualTo(user.getUserId());
+            List<Subscription> sublist2 = subscriptionService.querySubscription(subExample2);
             if (sublist2.size() == 0) {
                 vo.setIsRegister("2");
                 vo.setUser(user);
@@ -81,13 +91,14 @@ public class QueryRegisterController {
                 return RestResponse.successResWithTokenData(vo, "YGdykliy_+@124LK/");
             }else{
                 vo.setIsRegister("4");
-                vo.setSubscription(sublist.get(0));
+                vo.setSubscription(sublist2.get(0));
                 ScheduleExample schExample = new ScheduleExample();
-                schExample.createCriteria().andScheduleIdEqualTo(sublist.get(0).getScheduleId());
+                schExample.createCriteria().andScheduleIdEqualTo(sublist2.get(0).getScheduleId());
                 Schedule sch = scheduleService.getScheduleInfo(schExample).get(0);
                 vo.setClinicTime(DateUtil.formatDate(sch.getClinicDate()) + " "
                                  + DateUtil.getWeekByDate(sch.getClinicWeek()) + " 上午 10:00-12:00");
-                vo.setCreateTime(DateUtil.formatDateTime(sublist.get(0).getCreateTime()));
+                vo.setCreateTime(DateUtil.formatDateTime(sublist2.get(0).getUpdateTime()));
+                vo.setSubscription(sublist2.get(0));
                 return RestResponse.successResWithTokenData(vo, "YGdykliy_+@124LK/");
                 
             }
@@ -101,6 +112,9 @@ public class QueryRegisterController {
                          + DateUtil.getWeekByDate(sch.getClinicWeek()) + " 上午 10:00-12:00");
         vo.setCreateTime(DateUtil.formatDateTime(sublist.get(0).getCreateTime()));
         return RestResponse.successResWithTokenData(vo, "YGdykliy_+@124LK/");
+        }catch(EhospitalServiceException e){
+            return RestResponse.errorRes(e.getMessage());
+        }
     }
 
     /**
@@ -165,7 +179,7 @@ public class QueryRegisterController {
      */
     @RequestMapping(value = "/querySubscription", method = RequestMethod.POST)
     @ResponseBody
-    public RestResponse querySubscriptionList(String telPhone,String startDate,String endDate,String clincStartDate,String clincEndDate,int currentPage,int pageSize,String status){
+    public RestResponse querySubscriptionList(String telPhone,String startDate,String endDate,String clincStartDate,String clincEndDate,int currentPage,int pageSize,int status){
         SubscriptionExample subExample = new SubscriptionExample();
         Criteria criteria = subExample.createCriteria();
         if(StringUtils.hasText(telPhone)){
@@ -183,9 +197,48 @@ public class QueryRegisterController {
             String end = DateUtil.parseGMTDate(dateArr[1]);
             criteria.andSubscriptionDateBetween(DateUtil.parseDateString(start,"yyyy-MM-dd"), DateUtil.parseDateString(end,"yyyy-MM-dd"));
         }
+        
+        if(-1 == status){
+            criteria.andSubscriptionStatusEqualTo(0);
+        }else if(0 == status){
+            criteria.andSubscriptionStatusEqualTo(0);
+            criteria.andSubscriptionDateBetween(DateUtil.formatDateToDate(new Date()),DateUtil.formatDateToDate(new Date()));
+        }else{
+            criteria.andSubscriptionStatusEqualTo(status);
+        }
+        
        
         List<Subscription> sublist2 = subscriptionService.querySubscriptionByPage(subExample,currentPage,pageSize);
         
         return RestResponse.successResWithTokenData(sublist2, "YGdykliy_+@124LK/");
+    }
+    
+    @RequestMapping(value = "/updateSubStatus", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResponse updateSubStatus(int subid,int status){
+        Subscription sub = new Subscription();
+        sub.setSubscriptionId(subid);
+        sub.setSubscriptionStatus(status);
+        sub.setUpdateTime(new Date());
+        subscriptionService.updateSubStatus(sub);
+        return RestResponse.successResWithTokenData(1, "YGdykliy_+@124LK/");
+    }
+    
+    @RequestMapping(value = "/querySubscriptionDetail", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResponse querySubscriptionDetail(int subid){
+        SubscriptionExample subExample = new SubscriptionExample();
+        Criteria criteria = subExample.createCriteria();
+        criteria.andSubscriptionIdEqualTo(subid);
+        List<Subscription> sublist = subscriptionService.querySubscription(subExample);
+        if(sublist.size() >0 ){
+            RegisterVO vo = new RegisterVO();
+            vo.setSubscription(sublist.get(0));
+            vo.setClinicTime(DateUtil.formatDate(sublist.get(0).getSubscriptionDate()) + " "
+                    + sublist.get(0).getSubscriptionTime());
+            vo.setCreateTime(DateUtil.formatDateTime(sublist.get(0).getUpdateTime()));
+            return RestResponse.successResWithTokenData(vo, "YGdykliy_+@124LK/");  
+        }
+        return RestResponse.successResWithTokenData(new RegisterVO(), "YGdykliy_+@124LK/");
     }
 }

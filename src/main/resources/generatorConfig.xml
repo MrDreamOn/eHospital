@@ -39,15 +39,21 @@
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
-		<javaClientGenerator type="XMLMAPPER" targetPackage="${target.package}.dao" targetProject="${target.project}">
+		<!-- <javaClientGenerator type="XMLMAPPER" targetPackage="${target.package}.dao" targetProject="${target.project}">
 			<property name="enableSubPackages" value="true" />
-		</javaClientGenerator>
+		</javaClientGenerator> -->
   
         <!-- <table tableName="test_user" >
             <generatedKey column="id" sqlStatement="Mysql" type="post" identity="true"/>
         </table> -->
         
-        <table schema="${jdbc.username}" tableName="t_user" domainObjectName="User">
+        <table schema="${jdbc.username}" tableName="t_schedule" domainObjectName="Schedule">
+ 			<property name="useActualColumnNames" value="false" />
+ 			<property name="constructorBased" value="true" />
+ 			<property name="ignoreQualifiersAtRuntime" value="true" />
+ 		</table>
+ 		
+ 		 <table schema="${jdbc.username}" tableName="t_subscription" domainObjectName="Subscription">
  			<property name="useActualColumnNames" value="false" />
  			<property name="constructorBased" value="true" />
  			<property name="ignoreQualifiersAtRuntime" value="true" />
@@ -103,11 +109,11 @@
  			<property name="ignoreQualifiersAtRuntime" value="true" />
  		</table>  -->
  		
- 		<table schema="${jdbc.username}" tableName="t_token" domainObjectName="Token">
+ 		<!-- <table schema="${jdbc.username}" tableName="t_token" domainObjectName="Token">
  			<property name="useActualColumnNames" value="false" />
  			<property name="constructorBased" value="true" />
  			<property name="ignoreQualifiersAtRuntime" value="true" />
- 		</table> 
+ 		</table>  -->
  		
  		<!-- <table schema="${jdbc.username}" tableName="t_patient" domainObjectName="Patient">
  			<property name="useActualColumnNames" value="false" />
