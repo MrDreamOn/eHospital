@@ -258,4 +258,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public int updateSubStatus(Subscription sub) {
         return subscriptionMapper.updateByPrimaryKeySelective(sub);
     }
+
+    @Override
+    public int cancleSubscription(String subcriptionId) {
+        
+        Subscription sub = subscriptionMapper.selectByPrimaryKey(Integer.parseInt(subcriptionId));
+        Subscription example = new Subscription();
+        example.setSubscriptionId(Integer.parseInt(subcriptionId));
+        example.setSubscriptionStatus(4);
+        example.setUpdateTime(new Date());
+        int result = subscriptionMapper.updateByPrimaryKeySelective(example);
+        Schedule sch = scheduleMapper.selectByPrimaryKey(sub.getScheduleId());
+        Schedule schEx = new Schedule();
+        schEx.setScheduleId(sub.getScheduleId());
+        schEx.setClinicNo(sch.getClinicNo()+1);
+        int result2 = scheduleMapper.updateByPrimaryKeySelective(schEx);
+        if(result == 0 || result2 == 0){
+            throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE, "预约取消失败");
+        }
+        return 1;
+    }
 }

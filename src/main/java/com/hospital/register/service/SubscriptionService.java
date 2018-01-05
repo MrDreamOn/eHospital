@@ -28,4 +28,6 @@ public interface SubscriptionService {
     public List<Subscription>  querySubscriptionByPage(SubscriptionExample  example,int currentPage,int pageSize);
 
     public int updateSubStatus(Subscription sub);
+    
+    public int cancleSubscription(String subcriptionId);
 }
