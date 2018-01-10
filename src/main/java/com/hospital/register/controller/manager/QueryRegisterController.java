@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +58,7 @@ public class QueryRegisterController {
     @RequestMapping(value = "/queryTelphone", method = RequestMethod.POST)
     @ResponseBody
     @TokenAccess
-    public RestResponse queryTelphone(HttpServletRequest request) {
+    public RestResponse queryTelphone(HttpServletRequest request,HttpServletResponse response) {
         try{
         String telPhone = request.getParameter("telPhone");
         logger.info("queryUser,telPhone={}", telPhone);
@@ -112,12 +113,14 @@ public class QueryRegisterController {
                          + DateUtil.getWeekByDate(sch.getClinicWeek()) + " 上午 10:00-12:00");
         vo.setCreateTime(DateUtil.formatDateTime(sublist.get(0).getCreateTime()));
         return RestResponse.successResWithTokenData(vo, "YGdykliy_+@124LK/");
-        }catch(EhospitalServiceException e){
+        }catch(Exception e){
+        	System.out.println(e.getMessage());
             return RestResponse.errorRes(e.getMessage());
         }
     }
 
-    /**
+
+	/**
     * 根据输入信息新增挂号
     * @param userVO
     * @return
