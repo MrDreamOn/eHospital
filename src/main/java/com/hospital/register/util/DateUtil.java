@@ -534,10 +534,9 @@ public class DateUtil {
      * @return
      * @throws Exception
      */
-    public static int dayForWeek(String pTime) throws Exception {
-          SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    public static int dayForWeek(Date pTime) throws Exception {
           Calendar c = Calendar.getInstance();
-          c.setTime(format.parse(pTime));
+          c.setTime(pTime);
           int dayForWeek = 0;
           dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
           return dayForWeek;
@@ -740,5 +739,4 @@ public class DateUtil {
         DateFormat format = new SimpleDateFormat("MM-dd");
         return format.format(date);
     }
-
 }

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,6 +23,7 @@ import com.hospital.register.bean.User;
 import com.hospital.register.bean.UserExample;
 import com.hospital.register.conditionVO.ScheduleVO;
 import com.hospital.register.conditionVO.SubscriptionVO;
+import com.hospital.register.conditionVO.UserVO;
 import com.hospital.register.exception.EhospitalServiceException;
 import com.hospital.register.service.ScheduleService;
 import com.hospital.register.service.SubscriptionService;
@@ -60,6 +60,9 @@ public class SubscriptionController {
     public RestResponse addSubcription(HttpServletRequest request) {
         String userId = request.getParameter("userId");
         String scheduleId = request.getParameter("scheduleId");
+        String idCard = request.getParameter("idCard");
+        String telPhone = request.getParameter("telPhone");
+        String name = request.getParameter("name");
         UserExample ue = new UserExample();
         ue.createCriteria().andUserIdEqualTo(Integer.parseInt(userId));
         User user = userService.findUsersByCondition(ue).get(0);
@@ -70,14 +73,15 @@ public class SubscriptionController {
         
         Subscription subVO = new Subscription();
         subVO.setScheduleId(schedule.getScheduleId());
-        subVO.setUserId(user.getUserId());
-        subVO.setPatientName(user.getRealName());
-        subVO.setPatientBirthday(user.getBirthday());
-        subVO.setPatientSex(user.getSex());
-        subVO.setPatientPhone(user.getTelephone());
+        subVO.setUserId(Integer.parseInt(userId));
+        subVO.setPatientName(name);
+        IdcardInfoExtractor idcardInfoExtractor = new IdcardInfoExtractor(idCard);
+        subVO.setPatientBirthday(idcardInfoExtractor.getBirthday());
+        subVO.setPatientSex(Integer.parseInt(idcardInfoExtractor.getGender()));
+        subVO.setPatientPhone(telPhone);
         subVO.setSubscriptionDate(schedule.getClinicDate());
         subVO.setSubscriptionTime(schedule.getClinicTime());
-        subVO.setSubscriptionStatus(1);
+        subVO.setSubscriptionStatus(0);
         subVO.setSubscriptionFee(schedule.getClinicFee().longValue());
         subVO.setCreateTime(new Date());
         subVO.setUpdateTime(new Date());
@@ -144,35 +148,30 @@ public class SubscriptionController {
         UserExample example = new UserExample();
         example.createCriteria().andOpenIdEqualTo(openId);
         List<User> list = userService.findUsersByCondition(example);
-        User user = list.get(0);
-        if (!StringUtils.hasLength(user.getRealName())) {
+        User user2 = list.get(0);
+//        if (!StringUtils.hasLength(user.getRealName())) {
             IdcardValidator idcardValidator = new IdcardValidator();
             if (!idcardValidator.isValidatedAllIdcard(idCard)) {
                 return RestResponse.errorRes("身份证格式错误！");
             }
-
+            UserVO user = new UserVO();
             IdcardInfoExtractor idcardInfoExtractor = new IdcardInfoExtractor(idCard);
-            user.setBirthday(idcardInfoExtractor.getBirthday());
-            user.setUserName("游客");
+           
             user.setRealName(name);
             user.setIdCard(idCard);
-            user.setTelephone(telPhone);
-            user.setSex(Integer.parseInt(idcardInfoExtractor.getGender()));
-            user.setOpenId(openId);
-            user.setPassword("!qazXsw2");
-            user.setCreateTime(new Date());
-            user.setUpdateTime(new Date());
-            userService.updateUserByPrimaryKey(user);
-        }
+            user.setTelphone(telPhone);
+            user.setSexStr(idcardInfoExtractor.getGender().equals("1")?"男":"女");
+            user.setAge(idcardInfoExtractor.getAge()+"");
+//        }
         SubscriptionExample exampleSub = new SubscriptionExample();
         com.hospital.register.bean.SubscriptionExample.Criteria criteria = exampleSub
             .createCriteria();
         criteria.andScheduleIdEqualTo(Integer.parseInt(scheduleId));
-        criteria.andUserIdEqualTo(user.getUserId());
+        criteria.andUserIdEqualTo(user2.getUserId());
         criteria.andSubscriptionStatusNotEqualTo(4);
         List<Subscription> listsub = subscriptionService.querySubscription(exampleSub);
         if (listsub.isEmpty()) {
-            return RestResponse.success();
+            return RestResponse.successResWithData(user);
         }
         return RestResponse.errorRes("您已预约过该排班,请选择其他时间");
     }
@@ -231,6 +230,46 @@ public class SubscriptionController {
            return RestResponse.errorRes(e.getMessage());
         }
         return RestResponse.success();
+    }
+    
+    
+    /**
+     * 查询预约记录
+     * 
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/querySubList", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResponse querySubscriptionList(HttpServletRequest request) {
+        //String userId =  request.getParameter("userId");
+        int userId = 31;
+        List<SubscriptionVO> subVOList = new ArrayList<SubscriptionVO>();
+        try{
+        SubscriptionExample example = new SubscriptionExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        example.setOrderByClause("subscription_date DESC ");
+        List<Subscription> subList = subscriptionService.querySubscriptionByPage(example, 1, 50);
+        for(Subscription sub : subList){
+            SubscriptionVO vo = new SubscriptionVO();
+            vo.setName(sub.getPatientName());
+            vo.setTelphone(sub.getPatientPhone());
+            vo.setStatus(sub.getSubscriptionStatus().toString());
+            StringBuilder sb = new StringBuilder();
+            sb.append(DateUtil.formatDate(sub.getSubscriptionDate()));
+            sb.append(" ");
+            sb.append(DateUtil.getWeekByDate(DateUtil.dayForWeek(sub.getSubscriptionDate())));
+            sb.append(" ");
+            sb.append(sub.getSubscriptionTime());
+            vo.setDateString(sb.toString());
+            subVOList.add(vo);
+        }
+        }catch(EhospitalServiceException ex){
+           return RestResponse.errorRes(ex.getMessage());
+        }catch(Exception e){
+           return RestResponse.errorRes(e.getMessage());
+        }
+        return RestResponse.successResWithData(subVOList);
     }
 
 }
