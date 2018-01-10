@@ -1,5 +1,6 @@
 package com.hospital.register.task;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,8 @@ public class InitScheduleInfoTask {
 	@Autowired
 	private ScheduleService scheduleService;
 	
-	@Scheduled(cron = "${schedule.init.schedulded:0 0 0 * * ?}")
+	
+	@Scheduled(cron = "${schedule.init.schedulded:0 30 23 * * ?}")
 	public void initHandler() throws Exception {
 		logger.info("initHandler start");
 		Long startTime = System.currentTimeMillis();
@@ -37,7 +39,7 @@ public class InitScheduleInfoTask {
 			logger.error("initHandler exception,{}", e);
 		} finally {
 			Long endTime = System.currentTimeMillis();
-			logger.info("time-consuming:[{}ms]", endTime - startTime);
+			logger.info("耗时:[{}ms]", endTime - startTime);
 
 		}
 		
@@ -47,26 +49,43 @@ public class InitScheduleInfoTask {
 		ScheduleExample examples = new ScheduleExample();
 		examples.setOrderByClause("clinic_date desc");
 		List<Schedule> resultSchedules = scheduleService.getScheduleInfo(examples);
-		Schedule schedule = new Schedule();
+		Date clinicDate = new Date(System.currentTimeMillis());
 		if(CollectionUtils.isNotEmpty(resultSchedules)) {
-			schedule = resultSchedules.get(0);
+			clinicDate = resultSchedules.get(0).getClinicDate();
 		}
 		List<Schedule> schedules = new ArrayList<Schedule>();
-		Date clinicDate = schedule.getClinicDate();
 		Date clinicDateNew =DateUtil.getAfterDay(clinicDate);
 		int dayOfWeek = DateUtil.dayForWeek(clinicDateNew);
-		schedule.setScheduleId(0);
+		Schedule schedule = new Schedule();
+		schedule.setHospitalId(1);
+		schedule.setDoctorId(1);
+		schedule.setDepartmentId(1);
 		schedule.setClinicDate(clinicDateNew);
+		schedule.setClinicTime("上午");
 		schedule.setClinicWeek(dayOfWeek);
+		schedule.setClinicType(1);
+		schedule.setClinicStatus(1);
+		schedule.setClinicNo(10);
+		schedule.setClinicFee(new BigDecimal(10));
 		schedule.setCreateTime(new Date());
 		schedule.setUpdateTime(new Date());
-		Random random = new Random();
-		if(random.nextBoolean()){
-		    schedule.setClinicTime("上午");
-		}else{
-		    schedule.setClinicTime("下午");  
-		}
+		
+		Schedule schedule2 = new Schedule();
+		schedule2.setHospitalId(1);
+		schedule2.setDoctorId(1);
+		schedule2.setDepartmentId(1);
+		schedule2.setClinicDate(clinicDateNew);
+		schedule2.setClinicTime("下午");
+		schedule2.setClinicWeek(dayOfWeek);
+		schedule2.setClinicType(1);
+		schedule2.setClinicStatus(1);
+		schedule2.setClinicNo(10);
+		schedule2.setClinicFee(new BigDecimal(10));
+		schedule2.setCreateTime(new Date());
+		schedule2.setUpdateTime(new Date());
+		
 		schedules.add(schedule);
+		schedules.add(schedule2);
 		return schedules;
 	}
 	
