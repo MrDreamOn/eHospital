@@ -49,7 +49,7 @@ public class LoginController {
 	@RequestMapping(value="/webAPP",method=RequestMethod.GET)
     public String webAPP() {
         logger.info("login");
-        return "webAPP";
+        return "login";
     }
 	
 	@RequestMapping(value="/login",method=RequestMethod.POST)

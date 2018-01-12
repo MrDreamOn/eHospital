@@ -19,6 +19,10 @@ public class UserVO {
     private String status;//1-预约 2-挂号
     
     private int subscriptionId;
+    
+    private String age;
+    
+    private String sexStr;
 
     public String getRealName() {
         return realName;
@@ -82,6 +86,22 @@ public class UserVO {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getSexStr() {
+        return sexStr;
+    }
+
+    public void setSexStr(String sexStr) {
+        this.sexStr = sexStr;
     }
     
     

@@ -55,7 +55,7 @@ public class InitScheduleInfoTask {
 		}
 		List<Schedule> schedules = new ArrayList<Schedule>();
 		Date clinicDateNew =DateUtil.getAfterDay(clinicDate);
-		int dayOfWeek = DateUtil.dayForWeek(DateUtil.formatDate(clinicDateNew));
+		int dayOfWeek = DateUtil.dayForWeek(clinicDateNew);
 		Schedule schedule = new Schedule();
 		schedule.setHospitalId(1);
 		schedule.setDoctorId(1);

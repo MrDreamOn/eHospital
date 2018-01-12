@@ -15,6 +15,8 @@ public class SubscriptionVO {
     private String age;
     
     private String telphone;
+    
+    private String status;
 
     public String getUserId() {
         return userId;
@@ -70,6 +72,14 @@ public class SubscriptionVO {
 
     public void setTelphone(String telphone) {
         this.telphone = telphone;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
     
     

@@ -57,7 +57,6 @@ public class QueryRegisterController {
      */
     @RequestMapping(value = "/queryTelphone", method = RequestMethod.POST)
     @ResponseBody
-    @TokenAccess
     public RestResponse queryTelphone(HttpServletRequest request,HttpServletResponse response) {
         try{
         String telPhone = request.getParameter("telPhone");
