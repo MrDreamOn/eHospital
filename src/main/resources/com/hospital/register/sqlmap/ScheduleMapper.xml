@@ -399,10 +399,10 @@
   </update>
   
     <update id="updateScheduleNo" parameterType="java.lang.Integer">
-    	update t_schedule set clinic_no = clinic_no-1 where clinic_no >=1 and schedule_id  =  #{scheduleId,jdbcType=INTEGER}
+    	update t_schedule set clinic_no = clinic_no-1 where <![CDATA[ clinic_no >=1 ]]> and schedule_id  =  #{scheduleId,jdbcType=INTEGER}
     </update>
     
-     <select  id="checkScheduleNo" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-    	select clinic_no from t_schedule where schedule_id  =  #{scheduleId,jdbcType=INTEGER} and clinic_no > 0;
+     <select id="checkScheduleNo" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    	select clinic_no from t_schedule where schedule_id  =  #{scheduleId,jdbcType=INTEGER} <![CDATA[ and clinic_no >0 ]]>
      </select>
 </mapper>

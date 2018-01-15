@@ -278,4 +278,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
         return 1;
     }
+
+	@Override
+	public long countSubsciption(SubscriptionExample example) {
+		return subscriptionMapper.countByExample(example);
+	}
 }

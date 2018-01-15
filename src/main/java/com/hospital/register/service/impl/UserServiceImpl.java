@@ -107,5 +107,25 @@ public class UserServiceImpl implements UserService{
     public int updateUserByPrimaryKey(User user) {
         return userMapper.updateByPrimaryKey(user);
     }
+
+	@Override
+	public List<User> findUsersByPage(UserExample example, int currentPage, int pageSize) throws Exception {
+		if (pageSize == 0) {
+			pageSize = 100;
+		}
+		PageHelper.startPage(currentPage, pageSize);
+		List<User> results = userMapper.selectByExample(example);
+		return results;
+	}
+
+	@Override
+	public long countUsers(UserExample example) {
+		return userMapper.countByExample(example);
+	}
+
+	@Override
+	public User findUserByPrimaryKey(Integer userId) {
+		return userMapper.selectByPrimaryKey(userId);
+	}
 	
 }

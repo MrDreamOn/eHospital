@@ -81,7 +81,4 @@ public class SubscriptionVO {
     public void setStatus(String status) {
         this.status = status;
     }
-    
-    
-    
 }

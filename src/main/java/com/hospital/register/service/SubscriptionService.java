@@ -30,4 +30,6 @@ public interface SubscriptionService {
     public int updateSubStatus(Subscription sub);
     
     public int cancleSubscription(String subcriptionId);
+    
+    public long countSubsciption(SubscriptionExample example);
 }
