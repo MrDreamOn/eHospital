@@ -284,8 +284,8 @@
   	select count(*) 
   	from t_user u INNER JOIN t_bonus b on u.user_id = b.user_id
   	where 1=1
-  	<if test="userName != null and userName !=''">
-  		and u.user_name = #{userName,jdbcType=VARCHAR}
+  	<if test="realName != null and realName !=''">
+  		and u.real_name = #{realName,jdbcType=VARCHAR}
   	</if>
   	<if test="telephone != null and telephone !=''">
   		and u.telephone = #{telephone,jdbcType=VARCHAR}
@@ -297,8 +297,8 @@
   	(select bd.complete_time from t_bonus_detail bd where bd.bonus_id = b.bonus_id order by bd.complete_time desc limit 1) complete_time 
   	from t_user u INNER JOIN t_bonus b on u.user_id = b.user_id
   	where 1=1
-  	<if test="userName != null and userName !=''">
-  		and u.user_name = #{userName,jdbcType=VARCHAR}
+  	<if test="realName != null and realName !=''">
+  		and u.real_name = #{realName,jdbcType=VARCHAR}
   	</if>
   	<if test="telephone != null and telephone !=''">
   		and u.telephone = #{telephone,jdbcType=VARCHAR}

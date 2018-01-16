@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.druid.util.StringUtils;
+import com.hospital.register.annotation.OperateLogs;
 import com.hospital.register.bean.Subscription;
 import com.hospital.register.bean.SubscriptionExample;
 import com.hospital.register.bean.User;
@@ -98,6 +99,7 @@ public class UserController {
 
 	@RequestMapping(value = "/getUserByCondition", method = RequestMethod.POST)
 	@ResponseBody
+	@OperateLogs(operateInfo="查询用户信息")
 	RestResponse getUser(String condition,Integer currentPage, Integer pageSize) {
 		logger.info("getUser info,condition:{},currentPage:{},pageSize:{}", condition,currentPage, pageSize);
 		if(StringUtils.isEmpty(condition)) {
@@ -110,7 +112,7 @@ public class UserController {
 			if(PhoneFormatCheckUtils.isPhoneLegal(condition)) {
 				example.createCriteria().andTelephoneEqualTo(condition);
 			}else {
-				example.createCriteria().andUserNameEqualTo(condition);
+				example.createCriteria().andRealNameEqualTo(condition);
 			}
 			long count = userService.countUsers(example);
 			if(count > 0) {

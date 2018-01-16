@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.github.pagehelper.PageHelper;
 import com.hospital.register.bean.Bonus;
+import com.hospital.register.dao.BonusDetailMapper;
 import com.hospital.register.bean.BonusDetail;
 import com.hospital.register.bean.BonusExample;
 import com.hospital.register.dao.BonusDetailMapper;
@@ -65,7 +66,7 @@ public class BonusServiceImpl implements BonusService {
     }
 
     @Override
-    public void updateBonus(Bonus bonus) {
+    public void updateBonus(Bonus bonus) {}
         bonusMapper.updateByPrimaryKey(bonus);
     }
 	
@@ -88,8 +89,4 @@ public class BonusServiceImpl implements BonusService {
 		return bonusDetailMapper.selectBonusDetail(paramsMap);
 	}
 
-
-
-	
-	
 }
