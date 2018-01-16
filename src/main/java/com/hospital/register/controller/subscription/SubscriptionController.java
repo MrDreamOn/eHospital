@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hospital.register.annotation.OperateLogs;
 import com.hospital.register.bean.Schedule;
 import com.hospital.register.bean.ScheduleExample;
 import com.hospital.register.bean.ScheduleExample.Criteria;
@@ -273,6 +274,7 @@ public class SubscriptionController {
 
 	@RequestMapping(value = "/querySubscription", method = RequestMethod.POST)
 	@ResponseBody
+	@OperateLogs(operateInfo="查询预约信息")
 	public RestResponse querySubscriptionNew(Integer userId, Integer currentPage, Integer pageSize) {
 		logger.info("querySubscription,userId={},currentPage={},pageSize={}", userId, currentPage, pageSize);
 		SubscriptionExample example = new SubscriptionExample();

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hospital.register.annotation.OperateLogs;
 import com.hospital.register.bean.Schedule;
 import com.hospital.register.bean.ScheduleExample;
 import com.hospital.register.service.ScheduleService;
@@ -46,6 +47,7 @@ public class ScheduleController {
 
 	@RequestMapping(value = "/querySchedule", method = RequestMethod.POST)
 	@ResponseBody
+	@OperateLogs(operateInfo="查询排班信息")
 	public RestResponse querySchedule(Integer currentPage, Integer pageSize) {
 		logger.info("getSchedule info,currentPage:{},pageSize:{}", currentPage, pageSize);
 		List<ScheduleView> resultList = new ArrayList<ScheduleView>();
@@ -102,6 +104,7 @@ public class ScheduleController {
 
 	@RequestMapping(value = "/updateSchedule", method = RequestMethod.POST)
 	@ResponseBody
+	@OperateLogs(operateInfo="更新排班信息")
 	public RestResponse updateSchedule(long clinicDate, boolean clinicStatus) {
 		logger.info("updateSchedule info,clinicDate:{},status:{}", clinicDate, clinicStatus);
 		int intClinicStatus = 0;
