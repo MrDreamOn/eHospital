@@ -1,9 +1,13 @@
 package com.hospital.register.dao;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hospital.register.bean.BonusDetail;
 import com.hospital.register.bean.BonusDetailExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
+import com.hospital.register.vo.BonusDetailVO;
 
 public interface BonusDetailMapper {
     /**
@@ -61,4 +65,18 @@ public interface BonusDetailMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") BonusDetail record, @Param("example") BonusDetailExample example);
+    
+    /**
+     * 
+     * @param paramsMap
+     * @return
+     */
+    long countBonusDetail(Map<String,Object> paramsMap);
+    
+    /**
+     * 
+     * @param paramsMap
+     * @return
+     */
+    List<BonusDetailVO> selectBonusDetail(Map<String,Object> paramsMap);
 }
