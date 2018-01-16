@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.PageHelper;
+import com.hospital.register.bean.Bonus;
+import com.hospital.register.bean.BonusExample;
 import com.hospital.register.bean.Schedule;
 import com.hospital.register.bean.ScheduleExample;
 import com.hospital.register.bean.Subscription;
@@ -18,9 +20,11 @@ import com.hospital.register.bean.User;
 import com.hospital.register.bean.UserExample;
 import com.hospital.register.conditionVO.RegisterVO;
 import com.hospital.register.conditionVO.UserVO;
+import com.hospital.register.dao.BonusMapper;
 import com.hospital.register.dao.ScheduleMapper;
 import com.hospital.register.dao.SubscriptionMapper;
 import com.hospital.register.exception.EhospitalServiceException;
+import com.hospital.register.service.BonusService;
 import com.hospital.register.service.ScheduleService;
 import com.hospital.register.service.SubscriptionService;
 import com.hospital.register.service.UserService;
@@ -49,6 +53,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Autowired
     private ScheduleService    scheduleService;
+    
+    @Autowired
+    private BonusMapper       bonusMapper;
 
     private void checkSubscription(Subscription subscription, String openid) {
         checkSameSubscription(subscription.getScheduleId(), subscription.getPatientPhone());
@@ -184,6 +191,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE,
                 "挂号失败，请稍后再试");
         }
+        
+        //插入bounds总表
+        
+        Bonus bonus = new Bonus();
+        bonus.setBonusPoints(0);
+        bonus.setCreateTime(new Date());
+        bonus.setUpdateTime(new Date());
+        bonus.setUserId(user.getUserId());
+        bonusMapper.insert(bonus);
 
     }
 
