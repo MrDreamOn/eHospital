@@ -7,6 +7,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
+import com.hospital.register.exception.EhospitalServiceException;
+import com.hospital.register.util.ResponseCode;
+
 @Component
 @Aspect
 public class TokenAccessAspect {
@@ -19,10 +22,9 @@ public class TokenAccessAspect {
         
         String token=request.getParameter("token");
         
-        if(!"123".equals(token)){
-            // 以下代码从JSON.java中拷过来
-            throw new Exception("token 验证失败");
-        }
+//        if(!"123".equals(token)){
+//            throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE,"token 验证失败");
+//        }
     }
     
 }

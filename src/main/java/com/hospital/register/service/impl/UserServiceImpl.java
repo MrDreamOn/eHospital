@@ -53,7 +53,9 @@ public class UserServiceImpl implements UserService{
 	public List<User> findUsersByCondition(UserExample example) {
 		List<User> results = userMapper.selectByExample(example);
 		for(User item : results) {
-			item.setPassword(null);
+		    if(!item.getUserName().equals("admin")){
+		        item.setPassword(null);
+		    }
 		}
 		return results;
 	}

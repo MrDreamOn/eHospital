@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +56,8 @@ public class QueryRegisterController {
      */
     @RequestMapping(value = "/queryTelphone", method = RequestMethod.POST)
     @ResponseBody
-    public RestResponse queryTelphone(HttpServletRequest request,HttpServletResponse response) {
+    @TokenAccess
+    public RestResponse queryTelphone(HttpServletRequest request) {
         try{
         String telPhone = request.getParameter("telPhone");
         logger.info("queryUser,telPhone={}", telPhone);
@@ -217,11 +217,22 @@ public class QueryRegisterController {
     
     @RequestMapping(value = "/updateSubStatus", method = RequestMethod.POST)
     @ResponseBody
-    public RestResponse updateSubStatus(int subid,int status){
+    public RestResponse updateSubStatus(HttpServletRequest request){
+        String subid = request.getParameter("subid");
+        String status = request.getParameter("status");
+        String score = request.getParameter("score");
         Subscription sub = new Subscription();
-        sub.setSubscriptionId(subid);
-        sub.setSubscriptionStatus(status);
+        sub.setSubscriptionId(Integer.parseInt(subid));
+        sub.setSubscriptionStatus(Integer.parseInt(status));
         sub.setUpdateTime(new Date());
+        if("6".equals(status)){
+            if(StringUtils.hasText(score)){
+                System.out.println("新增积分记录");
+            }else{
+                return RestResponse.errorRes("请输入积分");
+            }
+      
+        }
         subscriptionService.updateSubStatus(sub);
         return RestResponse.successResWithTokenData(1, "YGdykliy_+@124LK/");
     }
