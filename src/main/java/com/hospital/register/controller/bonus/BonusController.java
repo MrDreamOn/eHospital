@@ -1,6 +1,7 @@
 package com.hospital.register.controller.bonus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import com.hospital.register.service.BonusService;
 import com.hospital.register.service.UserService;
 import com.hospital.register.util.PhoneFormatCheckUtils;
 import com.hospital.register.util.RestResponse;
+import com.hospital.register.vo.BonusDetailVO;
 import com.hospital.register.vo.UserBonusVO;
 
 @Controller
@@ -65,9 +67,9 @@ public class BonusController {
 	
 	@RequestMapping(value = "/queryBonusDetail", method = RequestMethod.POST)
 	@ResponseBody
-	RestResponse queryBonusDetail(Integer userId,Integer currentPage, Integer pageSize) {
-		logger.info("get Bonus info,userId:{},currentPage:{},pageSize:{}", userId,currentPage, pageSize);
-		List<UserBonusVO> userBonusList = new ArrayList<UserBonusVO>();
+	RestResponse queryBonusDetail(Integer userId,Date startTime,Date endTime,Integer currentPage, Integer pageSize) {
+		logger.info("get Bonus info,userId:{},currentPage:{},pageSize:{},startTime={},endTime={}", userId,currentPage, pageSize,startTime,endTime);
+		List<BonusDetailVO> bonusDetailList = new ArrayList<BonusDetailVO>();
 		List<UserVO> resultList = new ArrayList<UserVO>();
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		try {
@@ -81,19 +83,21 @@ public class BonusController {
 			vo.setCreateTime(user.getCreateTime());
 			resultList.add(vo);
 			resultMap.put("memberInfo", resultList);
-			resultMap.put("bonusList", userBonusList);
-			/*if(PhoneFormatCheckUtils.isPhoneLegal(condition)) {
-				paramsMap.put("telephone", condition);
-			}else {
-				paramsMap.put("userName", condition);
+			
+			Map<String,Object> paramsMap = new HashMap<String,Object>();
+			paramsMap.put("userId", userId);
+			if(startTime != null && endTime != null) {
+				paramsMap.put("startTime", startTime);
+				paramsMap.put("endTime", endTime);
 			}
-			long count = bonusService.countByCondition(paramsMap);
+			long count = bonusService.countBonusDetail(paramsMap);
 			if(count > 0) {
 				paramsMap.put("currentPage", currentPage);
 				paramsMap.put("pageSize", pageSize);
-				userBonusList = bonusService.selectUserBonusByCondition(paramsMap);
-			}*/
-			return RestResponse.successRes4Find(resultMap, 100);
+				bonusDetailList = bonusService.selectBonusDetail(paramsMap);
+			}
+			resultMap.put("bonusList", bonusDetailList);
+			return RestResponse.successRes4Find(resultMap, Integer.parseInt(count + ""));
 		} catch (Exception e) {
 			logger.error("查询用户积分明细信息出错,e={}", e);
 			return RestResponse.errorRes("查询用户积分明细信息出错");

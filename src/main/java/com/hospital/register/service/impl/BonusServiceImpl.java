@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.github.pagehelper.PageHelper;
+import com.hospital.register.dao.BonusDetailMapper;
 import com.hospital.register.dao.BonusMapper;
 import com.hospital.register.service.BonusService;
+import com.hospital.register.vo.BonusDetailVO;
 import com.hospital.register.vo.UserBonusVO;
 
 @Component
@@ -19,6 +21,9 @@ public class BonusServiceImpl implements BonusService {
 	
 	@Autowired
 	private BonusMapper bonusMapper;
+	
+	@Autowired
+	private BonusDetailMapper bonusDetailMapper;
 
 	@Override
 	public long countByCondition(Map<String, Object> paramsMap) throws Exception {
@@ -38,6 +43,26 @@ public class BonusServiceImpl implements BonusService {
 		PageHelper.startPage(currentPage, pageSize);
 		return bonusMapper.selectBonusByCondition(paramsMap);
 	}
+	
+	@Override
+	public long countBonusDetail(Map<String, Object> paramsMap) throws Exception {
+		logger.info("countBonusDetail");
+		return bonusDetailMapper.countBonusDetail(paramsMap);
+	}
+
+	@Override
+	public List<BonusDetailVO> selectBonusDetail(Map<String, Object> paramsMap) throws Exception {
+		logger.info("selectBonusDetail");
+		int currentPage = 1;
+		int pageSize = 100;
+		if(paramsMap.containsKey("currentPage")&&paramsMap.containsKey("pageSize")) {
+			currentPage = (int)paramsMap.get("currentPage");
+			pageSize = (int)paramsMap.get("pageSize");
+		}
+		PageHelper.startPage(currentPage, pageSize);
+		return bonusDetailMapper.selectBonusDetail(paramsMap);
+	}
+
 
 	
 	

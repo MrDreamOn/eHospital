@@ -231,4 +231,46 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  
+  <resultMap type="com.hospital.register.vo.BonusDetailVO" id="BonusDetailResultMap">
+  	<result column="complete_time" property="completeTime" jdbcType="TIMESTAMP"/>
+  	<result column="subscription_id" property="subId" jdbcType="INTEGER"/>
+  	<result column="settle_mode" property="settleMode" jdbcType="VARCHAR"/>
+  	<result column="settle_amount" property="settleAmount" jdbcType="DECIMAL"/>
+  	<result column="bonus_points" property="bonusPoints" jdbcType="INTEGER"/>
+  	<result column="total_points" property="totalPoints" jdbcType="INTEGER"/>
+  </resultMap>
+  
+  <select id="countBonusDetail" parameterType="java.util.Map" resultType="java.lang.Long">
+  	select count(*)
+  	from t_bonus b INNER JOIN t_bonus_detail bd on b.bonus_id = bd.bonus_id
+  	where 1=1
+  	<if test="userId != null">
+  		and b.user_id = #{userId,jdbcType=INTEGER}
+  	</if>
+  	<if test="startTime != null">
+  		<![CDATA[ and bd.complete_time >= #{startTime,jdbcType=TIMESTAMP} ]]>
+  	</if>
+  	<if test="endTime != null">
+  		<![CDATA[ and bd.complete_time < #{endTime,jdbcType=TIMESTAMP} ]]>
+  	</if>
+  </select>
+  
+  <select id="selectBonusDetail" parameterType="java.util.Map" resultMap="BonusDetailResultMap">
+  	select bd.complete_time,bd.subscription_id,
+  	bd.settle_mode,bd.settle_amount,
+  	bd.bonus_points,b.bonus_points total_points
+  	from t_bonus b INNER JOIN t_bonus_detail bd on b.bonus_id = bd.bonus_id
+  	where 1=1
+  	<if test="userId != null">
+  		and b.user_id = #{userId,jdbcType=INTEGER}
+  	</if>
+  	<if test="startTime != null">
+  		<![CDATA[ and bd.complete_time >= #{startTime,jdbcType=TIMESTAMP} ]]>
+  	</if>
+  	<if test="endTime != null">
+  		<![CDATA[ and bd.complete_time < #{endTime,jdbcType=TIMESTAMP} ]]>
+  	</if>
+  	order by bd.complete_time DESC
+  </select>
 </mapper>
