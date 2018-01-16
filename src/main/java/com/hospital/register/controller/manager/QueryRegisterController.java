@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hospital.register.annotation.TokenAccess;
+import com.hospital.register.bean.Bonus;
+import com.hospital.register.bean.BonusDetail;
 import com.hospital.register.bean.Schedule;
 import com.hospital.register.bean.ScheduleExample;
 import com.hospital.register.bean.Subscription;
@@ -25,6 +27,7 @@ import com.hospital.register.bean.UserExample;
 import com.hospital.register.conditionVO.RegisterVO;
 import com.hospital.register.conditionVO.UserVO;
 import com.hospital.register.exception.EhospitalServiceException;
+import com.hospital.register.service.BonusService;
 import com.hospital.register.service.ScheduleService;
 import com.hospital.register.service.SubscriptionService;
 import com.hospital.register.service.UserService;
@@ -47,6 +50,9 @@ public class QueryRegisterController {
 
     @Autowired
     private ScheduleService     scheduleService;
+    
+    @Autowired
+    private BonusService        bonusService;
 
     /**
      * 根据手机号判断是否是会员
@@ -225,9 +231,44 @@ public class QueryRegisterController {
         sub.setSubscriptionId(Integer.parseInt(subid));
         sub.setSubscriptionStatus(Integer.parseInt(status));
         sub.setUpdateTime(new Date());
+        SubscriptionExample ex = new SubscriptionExample();
+        ex.createCriteria().andSubscriptionIdEqualTo(sub.getSubscriptionId());
+        Subscription subVO = subscriptionService.querySubscription(ex).get(0);
         if("6".equals(status)){
             if(StringUtils.hasText(score)){
-                System.out.println("新增积分记录");
+                Bonus bonusVO = new Bonus();
+                bonusVO.setUserId(subVO.getUserId());
+               List<Bonus> bList =  bonusService.queryBonusByCondition(bonusVO);
+               if(bList.size() == 0){
+                   Bonus bonus = new Bonus();
+                   bonus.setBonusPoints(Integer.parseInt(score));
+                   bonus.setCreateTime(new Date());
+                   bonus.setUpdateTime(new Date());
+                   bonus.setUserId(subVO.getUserId());
+                   bonusService.addBonus(bonus);
+                   BonusDetail detail = new BonusDetail();
+                   detail.setBonusId(bonus.getBonusId());
+                   detail.setBonusPoints(Integer.parseInt(score));
+                   detail.setCompleteTime(new Date());
+                   detail.setSettleAmount(subVO.getSubscriptionFee());
+                   detail.setSettleMode(1);
+                   detail.setSubscriptionId(subVO.getSubscriptionId());
+                   bonusService.addBonusDetail(detail);
+               }else{
+                   Bonus  b = bList.get(0);
+                   BonusDetail detail = new BonusDetail();
+                   detail.setBonusId(b.getBonusId());
+                   detail.setBonusPoints(Integer.parseInt(score));
+                   detail.setCompleteTime(new Date());
+                   detail.setSettleAmount(subVO.getSubscriptionFee());
+                   detail.setSettleMode(1);
+                   detail.setSubscriptionId(subVO.getSubscriptionId());
+                   bonusService.addBonusDetail(detail);
+                   b.setBonusPoints(b.getBonusPoints()+detail.getBonusPoints());
+                   b.setUpdateTime(new Date());
+                   bonusService.updateBonus(b);
+               }
+          
             }else{
                 return RestResponse.errorRes("请输入积分");
             }

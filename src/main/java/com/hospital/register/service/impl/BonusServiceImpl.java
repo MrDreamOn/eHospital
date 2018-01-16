@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.github.pagehelper.PageHelper;
+import com.hospital.register.bean.Bonus;
+import com.hospital.register.bean.BonusDetail;
+import com.hospital.register.bean.BonusExample;
+import com.hospital.register.dao.BonusDetailMapper;
 import com.hospital.register.dao.BonusMapper;
 import com.hospital.register.service.BonusService;
 import com.hospital.register.vo.UserBonusVO;
@@ -19,6 +23,9 @@ public class BonusServiceImpl implements BonusService {
 	
 	@Autowired
 	private BonusMapper bonusMapper;
+	
+	@Autowired
+	private BonusDetailMapper bonusDetailMapper;
 
 	@Override
 	public long countByCondition(Map<String, Object> paramsMap) throws Exception {
@@ -38,6 +45,28 @@ public class BonusServiceImpl implements BonusService {
 		PageHelper.startPage(currentPage, pageSize);
 		return bonusMapper.selectBonusByCondition(paramsMap);
 	}
+
+    @Override
+    public void addBonusDetail(BonusDetail bonusDetail) {
+        bonusDetailMapper.insert(bonusDetail);
+    }
+
+    @Override
+    public List<Bonus> queryBonusByCondition(Bonus bonus) {
+        BonusExample bex = new BonusExample();
+        bex.createCriteria().andBonusIdEqualTo(bonus.getUserId());
+        return bonusMapper.selectByExample(bex);
+    }
+
+    @Override
+    public void addBonus(Bonus bonus) {
+        bonusMapper.insert(bonus);
+    }
+
+    @Override
+    public void updateBonus(Bonus bonus) {
+        bonusMapper.updateByPrimaryKey(bonus);
+    }
 
 	
 	
