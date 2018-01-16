@@ -739,4 +739,36 @@ public class DateUtil {
         DateFormat format = new SimpleDateFormat("MM-dd");
         return format.format(date);
     }
+    
+    public static Date getBeforWeekendStart(){
+        Calendar calendar1 = Calendar.getInstance(); 
+        int dayOfWeek = calendar1.get(Calendar.DAY_OF_WEEK) - 1; 
+        int offset1 = 1 - dayOfWeek;
+        calendar1.add(Calendar.DATE, offset1 - 7); 
+        return calendar1.getTime();
+    }
+    
+    public static Date getBeforWeekendend(){
+        Calendar calendar1 = Calendar.getInstance(); 
+        int dayOfWeek = calendar1.get(Calendar.DAY_OF_WEEK) - 1; 
+        int offset2 = 7 - dayOfWeek;  
+        calendar1.add(Calendar.DATE, offset2 - 7); 
+        return calendar1.getTime();
+    }
+    
+    //上个月第一天
+    public static Date getBeforeMonthStart(){
+        Calendar calendar=Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        return calendar.getTime();
+    }
+  //上个月最后一天
+    public static Date getBeforeMonthEnd(){
+        Calendar calendar=Calendar.getInstance();
+        int month=calendar.get(Calendar.MONTH);
+        calendar.set(Calendar.MONTH, month-1);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return calendar.getTime();
+    }
 }

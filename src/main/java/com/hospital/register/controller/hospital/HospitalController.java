@@ -68,7 +68,7 @@ public class HospitalController {
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @ResponseBody
     public RestResponse hospitalQuery(HttpServletRequest request) {
-        logger.info("update hospital info ...");
+        logger.info("query hospital info ...");
         
         Hospital hospital =  hospitalMapper.selectByPrimaryKey(1);
         
