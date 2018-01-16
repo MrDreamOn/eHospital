@@ -66,7 +66,7 @@ public class BonusServiceImpl implements BonusService {
     }
 
     @Override
-    public void updateBonus(Bonus bonus) {
+    public void updateBonus(Bonus bonus) {}
 	
 	@Override
 	public long countBonusDetail(Map<String, Object> paramsMap) throws Exception {
@@ -87,8 +87,4 @@ public class BonusServiceImpl implements BonusService {
 		return bonusDetailMapper.selectBonusDetail(paramsMap);
 	}
 
-
-
-	
-	
 }
