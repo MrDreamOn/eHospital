@@ -66,7 +66,7 @@ public class BonusServiceImpl implements BonusService {
     }
 
     @Override
-    public void updateBonus(Bonus bonus) {}
+    public void updateBonus(Bonus bonus) {
         bonusMapper.updateByPrimaryKey(bonus);
     }
 	
