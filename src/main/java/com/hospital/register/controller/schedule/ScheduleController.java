@@ -1,4 +1,4 @@
-package com.hospital.register.controller;
+package com.hospital.register.controller.schedule;
 
 import java.util.ArrayList;
 import java.util.Collections;

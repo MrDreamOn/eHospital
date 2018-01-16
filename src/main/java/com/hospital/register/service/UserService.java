@@ -26,4 +26,10 @@ public interface UserService {
     int updateRegister(User user);
     
     int updateUserByPrimaryKey(User user);
+    
+    List<User> findUsersByPage(UserExample example,int currentPage,int pageSize) throws Exception;
+    
+    long countUsers(UserExample example);
+    
+    User findUserByPrimaryKey(Integer userId);
 }
