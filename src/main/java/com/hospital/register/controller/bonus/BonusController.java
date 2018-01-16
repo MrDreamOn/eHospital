@@ -49,7 +49,7 @@ public class BonusController {
 			if(PhoneFormatCheckUtils.isPhoneLegal(condition)) {
 				paramsMap.put("telephone", condition);
 			}else {
-				paramsMap.put("userName", condition);
+				paramsMap.put("realName", condition);
 			}
 			long count = bonusService.countByCondition(paramsMap);
 			if(count > 0) {
