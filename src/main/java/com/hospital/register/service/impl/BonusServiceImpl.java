@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 import com.github.pagehelper.PageHelper;
 import com.hospital.register.bean.Bonus;
-import com.hospital.register.dao.BonusDetailMapper;
 import com.hospital.register.bean.BonusDetail;
+import com.hospital.register.bean.BonusDetailExample;
 import com.hospital.register.bean.BonusExample;
 import com.hospital.register.dao.BonusDetailMapper;
 import com.hospital.register.dao.BonusMapper;
@@ -87,6 +87,11 @@ public class BonusServiceImpl implements BonusService {
 		}
 		PageHelper.startPage(currentPage, pageSize);
 		return bonusDetailMapper.selectBonusDetail(paramsMap);
+	}
+
+	@Override
+	public List<BonusDetail> queryBonusDetailByExample(BonusDetailExample bex) throws Exception {
+		return bonusDetailMapper.selectByExample(bex);
 	}
 
 }

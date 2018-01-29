@@ -3,9 +3,10 @@ package com.hospital.register.service;
 import java.util.List;
 import java.util.Map;
 
-import com.hospital.register.vo.BonusDetailVO;
 import com.hospital.register.bean.Bonus;
 import com.hospital.register.bean.BonusDetail;
+import com.hospital.register.bean.BonusDetailExample;
+import com.hospital.register.vo.BonusDetailVO;
 import com.hospital.register.vo.UserBonusVO;
 
 public interface BonusService {
@@ -25,4 +26,6 @@ public interface BonusService {
 	public void addBonus(Bonus bonus);
 	
 	public void updateBonus(Bonus bonus);
+	
+	public List<BonusDetail> queryBonusDetailByExample(BonusDetailExample bex) throws Exception;
 }
