@@ -121,10 +121,12 @@ public class BonusController {
 			Map<String,Object> paramsMap = new HashMap<String,Object>();
 			paramsMap.put("userId", userId);
 			long count = bonusService.countBonusDetail(paramsMap);
+			int totalPoints = 0;
 			if(count > 0) {
 				bonusDetailList = bonusService.selectBonusDetail(paramsMap);
+				totalPoints = bonusDetailList.get(0).getTotalPoints();
 			}
-			resultMap.put("totalPoints", bonusDetailList.get(0).getTotalPoints());
+			resultMap.put("totalPoints", totalPoints);
 			resultMap.put("bonusList", bonusDetailList);
 			return RestResponse.successRes4Find(resultMap, Integer.parseInt(count + ""));
 		} catch (Exception e) {
