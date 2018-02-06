@@ -58,7 +58,7 @@ public class RegisterController {
         String telPhone = request.getParameter("telPhone");
         String name = request.getParameter("name");
         String idCard = request.getParameter("idCard");
-        String openId = request.getParameter("openId");
+        String userId = request.getParameter("userId");
         logger.info("queryUser,telPhone={}", telPhone);
         UserExample example = new UserExample();
         example.createCriteria().andTelephoneEqualTo(telPhone);
@@ -77,24 +77,17 @@ public class RegisterController {
             user.setIdCard(idCard);
             user.setTelephone(telPhone);
             user.setSex(Integer.parseInt(idcardInfoExtractor.getGender()));
-            user.setOpenId(openId);
+            user.setUserId(Integer.parseInt(userId));
             user.setPassword("!qazXsw2");
-            user.setCreateTime(new Date());
+           
             user.setUpdateTime(new Date());
-            int result = userService.addUser(user);
+            int result = userService.updateByPrimaryKeySelective(user);
             if (result == 0) {
                 RestResponse.errorRes("会员创建失败");
             }
             return RestResponse.success();
-        }else if(StringUtils.hasText(userList.get(0).getOpenId())){
-            return RestResponse.errorRes("改手机号已被注册，请跟换其他手机号");
         }else{
-            User user = userList.get(0);
-            user.setOpenId(openId);
-            user.setUpdateTime(new Date());
-            user.setPassword("!qazXsw2");
-            userService.updateUserByPrimaryKey(user);
-            return RestResponse.success();
+            return RestResponse.errorRes("改手机号已被注册，请跟换其他手机号");
         }
     }
 }

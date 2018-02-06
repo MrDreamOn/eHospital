@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hospital.register.annotation.OperateLogs;
 import com.hospital.register.bean.Doctor;
 import com.hospital.register.dao.DoctorMapper;
 import com.hospital.register.util.RestResponse;
@@ -33,6 +34,7 @@ public class DoctorController {
     
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
+    @OperateLogs(operateInfo="更新医生信息")
     public RestResponse doctorUpdate(HttpServletRequest request) {
         logger.info("update hospital info ...");
         

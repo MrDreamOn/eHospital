@@ -103,7 +103,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             }
         }
 
-        return ResponseCode.RESPONSE_COMMON_SUCCESS_MESSAGE;
+        return subscription.getSubscriptionId().toString();
     }
 
     private int subtractingScheduleNo(Integer scheduleId) {
@@ -113,7 +113,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     private int insertSubscription(Subscription subscription) {
-        return subscriptionMapper.insertSelective(subscription);
+        return subscriptionMapper.insert(subscription);
     }
 
     @Override

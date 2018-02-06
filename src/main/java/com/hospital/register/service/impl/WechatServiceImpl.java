@@ -69,30 +69,28 @@ public class WechatServiceImpl implements WechatService {
                     // 解析请求数据
                     Map<String, String> map = requestVo.getMsgContentMap();
                     String openid = map.get("FromUserName");
-                    boolean isSub = userService.isSubscribe(openid);
+                   // boolean isSub = userService.isSubscribe(openid);
                     // 事件消息
                     if ("event".equals(map.get("MsgType"))) {
                         // 关注事件
                         if ("subscribe".equals(map.get("Event"))) {
                             //查询当前关注的用户是否已经存在.不存在就新建，存在则更新数据库
-                            if (isSub) {
+                           
                                 boolean isReg = userService.isRegister(openid);
                                 if(!isReg){
-                                    /**
-                                     * 发送图文消息
-                                     */
+                                    User userVO = new User();
+                                    userVO.setUserName(defaultUserName);
+                                    userVO.setPassword(PasswordHelper.encryptPassword(userVO.getUserName(),defaultPassword));
+                                    userVO.setOpenId(openid);
+                                    userVO.setCreateTime(new Date());
+                                    userVO.setUpdateTime(new Date());
+                                    userService.addUser(userVO);
                                     return  responseNewsMessage(map);
-                                }
-                            } else {
-                                //新增微信关注用户
-                                User userVO = new User();
-                                userVO.setUserName(defaultUserName);
-                                userVO.setPassword(PasswordHelper.encryptPassword(userVO.getUserName(),defaultPassword));
-                                userVO.setOpenId(openid);
-                                userVO.setCreateTime(new Date());
-                                userVO.setUpdateTime(new Date());
-                                userService.addUser(userVO);
-                            }
+                                }else {
+                                    return responseNewsText(map,"欢迎回来");
+                                } 
+                        }else{
+                            return "";
                         }
 
                     }
@@ -109,7 +107,7 @@ public class WechatServiceImpl implements WechatService {
             throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE,
                 "处理微信异步消息异常.", e);
         }
-        return null;
+        return "";
     }
 
     /**
@@ -187,15 +185,39 @@ public class WechatServiceImpl implements WechatService {
        Element root = doc.addElement("xml");
        root.addElement("ToUserName").addCDATA(map.get("FromUserName"));
        root.addElement("FromUserName").addCDATA(map.get("ToUserName"));
-       root.addElement("CreateTime").addCDATA(DateUtil.getCurrentDate());
-       root.addElement("MsgType").addCDATA("news");
-       root.addElement("ArticleCount").addCDATA("2");
-       Element artElement = root.addElement("Articles");
-       Element itemElement = artElement.addElement("item");
-       itemElement.addElement("Title").addCDATA("欢迎关注XX医院微信公众号");
-       itemElement.addElement("Description").addCDATA("点击立即注册");
-       itemElement.addElement("PicUrl").addCDATA("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1512845011827&di=6cd456f77c595eb5fc42fd28ecb62d4b&imgtype=0&src=http%3A%2F%2Fnpimg.39.net%2FPictureLib%2FA%2Ff76%2F20150122%2Forg_380277.jpg");
-       itemElement.addElement("Url").addCDATA("www.badu.com");
+       root.addElement("CreateTime").addCDATA(DateUtil.formatDateNoSplit(new Date()));
+       root.addElement("MsgType").addCDATA("text");
+       root.addElement("Content").addCDATA("<a href=\"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8fef15d232cfb5df&redirect_uri=http%3A%2F%2Fwx.shuyidajiankang.com%2Flogin2.html%23%2Fregister&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect\">欢迎关注,立即注册会员</a>");
+      // root.addElement("ArticleCount").addCDATA("2");
+//       Element artElement = root.addElement("Articles");
+//       Element itemElement = artElement.addElement("item");
+//       itemElement.addElement("Title").addCDATA("欢迎关注XX医院微信公众号");
+//       itemElement.addElement("Description").addCDATA("点击立即注册");
+//       itemElement.addElement("PicUrl").addCDATA("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1512845011827&di=6cd456f77c595eb5fc42fd28ecb62d4b&imgtype=0&src=http%3A%2F%2Fnpimg.39.net%2FPictureLib%2FA%2Ff76%2F20150122%2Forg_380277.jpg");
+//       itemElement.addElement("Url").addCDATA("www.badu.com");
+       
+       
+       
+       logger.info(String.format("需要返回给微信的message数据是:data={}", doc.getRootElement().asXML().trim()));
+       return doc.getRootElement().asXML();
+   }
+   
+   private static String responseNewsText(Map<String,String> map,String text){
+       Document doc = DocumentHelper.createDocument();
+       Element root = doc.addElement("xml");
+       root.addElement("ToUserName").addCDATA(map.get("FromUserName"));
+       root.addElement("FromUserName").addCDATA(map.get("ToUserName"));
+       root.addElement("CreateTime").addCDATA(DateUtil.formatDateNoSplit(new Date()));
+       root.addElement("MsgType").addCDATA("text");
+       root.addElement("Content").addCDATA(text);
+      // root.addElement("ArticleCount").addCDATA("2");
+//       Element artElement = root.addElement("Articles");
+//       Element itemElement = artElement.addElement("item");
+//       itemElement.addElement("Title").addCDATA("欢迎关注XX医院微信公众号");
+//       itemElement.addElement("Description").addCDATA("点击立即注册");
+//       itemElement.addElement("PicUrl").addCDATA("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1512845011827&di=6cd456f77c595eb5fc42fd28ecb62d4b&imgtype=0&src=http%3A%2F%2Fnpimg.39.net%2FPictureLib%2FA%2Ff76%2F20150122%2Forg_380277.jpg");
+//       itemElement.addElement("Url").addCDATA("www.badu.com");
+       
        
        
        logger.info(String.format("需要返回给微信的message数据是:data={}", doc.getRootElement().asXML().trim()));

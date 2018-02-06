@@ -33,3 +33,6 @@ _ReSharper*/
 .settings/
 /log/
 /target/
+
+src/main/resources/static/*.*
+src/main/resources/static/

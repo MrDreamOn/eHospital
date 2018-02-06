@@ -86,10 +86,12 @@ public class SubscriptionController {
 		subVO.setSubscriptionTime(schedule.getClinicTime());
 		subVO.setSubscriptionStatus(0);
 		subVO.setSubscriptionFee(schedule.getClinicFee().longValue());
+		subVO.setSubscriptionSource("wechat");
 		subVO.setCreateTime(new Date());
 		subVO.setUpdateTime(new Date());
 		try {
-			subscriptionService.addSubscription(subVO, user.getOpenId());
+			String id = subscriptionService.addSubscription(subVO, user.getOpenId());
+		     return RestResponse.successResWithTokenData(id, "YGdykliy_+@124LK/");
 		} catch (EhospitalServiceException eh) {
 			logger.info("addSubcription error,message={}", eh.getMessage());
 			return RestResponse.errorRes(eh.getMessage());
@@ -97,8 +99,6 @@ public class SubscriptionController {
 			logger.info("addSubcription error,message={}", e.getMessage());
 			return RestResponse.errorRes("系统异常,请稍后再试");
 		}
-		return RestResponse.successResWithTokenData(subVO.getSubscriptionId(), "YGdykliy_+@124LK/");
-
 	}
 
 	@RequestMapping(value = "/querySub", method = RequestMethod.POST)
@@ -126,10 +126,9 @@ public class SubscriptionController {
 	@RequestMapping(value = "/queryUser", method = RequestMethod.POST)
 	@ResponseBody
 	public RestResponse queryUser(HttpServletRequest request) {
-		// String openId = request.getParameter("openId");
-		String openId = "test_01_02";
+		String userId = request.getParameter("userId");
 		UserExample example = new UserExample();
-		example.createCriteria().andOpenIdEqualTo(openId);
+		example.createCriteria().andUserIdEqualTo(Integer.parseInt(userId));
 		List<User> list = userService.findUsersByCondition(example);
 		if (list.size() > 0) {
 			return RestResponse.successResWithTokenData(list.get(0), "YGdykliy_+@124LK/");
@@ -141,14 +140,14 @@ public class SubscriptionController {
 	@RequestMapping(value = "/checkSubInfo", method = RequestMethod.POST)
 	@ResponseBody
 	public RestResponse checkSubInfo(HttpServletRequest request) {
-		// String openId = request.getParameter("openId");
-		String openId = "test_01_02";
+		String userId = request.getParameter("userId");
+		//String openId = "test_01_02";
 		String name = request.getParameter("name");
 		String idCard = request.getParameter("idCard");
 		String telPhone = request.getParameter("telPhone");
 		String scheduleId = request.getParameter("scheduleId");
 		UserExample example = new UserExample();
-		example.createCriteria().andOpenIdEqualTo(openId);
+		example.createCriteria().andUserIdEqualTo(Integer.parseInt(userId));
 		List<User> list = userService.findUsersByCondition(example);
 		User user2 = list.get(0);
 		// if (!StringUtils.hasLength(user.getRealName())) {
@@ -172,6 +171,11 @@ public class SubscriptionController {
 		criteria.andSubscriptionStatusNotEqualTo(4);
 		List<Subscription> listsub = subscriptionService.querySubscription(exampleSub);
 		if (listsub.isEmpty()) {
+//	        user2.setRealName(user.getRealName());
+//	        user2.setIdCard(user.getIdCard());
+//	        user2.setTelephone(user.getTelphone());
+//	        user2.setSex(Integer.parseInt(idcardInfoExtractor.getGender()));
+//		    userService.updateByPrimaryKeySelective(user2);
 			return RestResponse.successResWithData(user);
 		}
 		return RestResponse.errorRes("您已预约过该排班,请选择其他时间");
@@ -197,11 +201,11 @@ public class SubscriptionController {
 		SubscriptionVO vo = new SubscriptionVO();
 		vo.setScheduleId(scheduleId);
 		vo.setUserId(userId);
-		IdcardInfoExtractor idcardInfoExtractor = new IdcardInfoExtractor(user.getIdCard());
-		vo.setAge(idcardInfoExtractor.getAge() + "");
-		vo.setName(user.getRealName());
-		vo.setSex(idcardInfoExtractor.getGender().equals("1") ? "男" : "女");
-		vo.setTelphone(user.getTelephone());
+//		IdcardInfoExtractor idcardInfoExtractor = new IdcardInfoExtractor(user.getIdCard());
+//		vo.setAge(idcardInfoExtractor.getAge() + "");
+//		vo.setName(user.getRealName());
+//		vo.setSex(idcardInfoExtractor.getGender().equals("1") ? "男" : "女");
+//		vo.setTelphone(user.getTelephone());
 		StringBuilder sb = new StringBuilder();
 		sb.append(DateUtil.formatDate(schedule.getClinicDate()));
 		sb.append(" ");
@@ -242,12 +246,11 @@ public class SubscriptionController {
 	@RequestMapping(value = "/querySubList", method = RequestMethod.POST)
 	@ResponseBody
 	public RestResponse querySubscriptionList(HttpServletRequest request) {
-		// String userId = request.getParameter("userId");
-		int userId = 31;
+		String userId = request.getParameter("userId");
 		List<SubscriptionVO> subVOList = new ArrayList<SubscriptionVO>();
 		try {
 			SubscriptionExample example = new SubscriptionExample();
-			example.createCriteria().andUserIdEqualTo(userId);
+			example.createCriteria().andUserIdEqualTo(Integer.parseInt(userId));
 			example.setOrderByClause("subscription_date DESC ");
 			List<Subscription> subList = subscriptionService.querySubscriptionByPage(example, 1, 50);
 			for (Subscription sub : subList) {

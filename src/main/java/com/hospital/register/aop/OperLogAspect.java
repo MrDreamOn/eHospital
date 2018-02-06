@@ -46,7 +46,7 @@ public class OperLogAspect {
         record.setOperateTime(new Date(System.currentTimeMillis()));
         record.setOperateRecord(operateInfo);
         record.setCreateTime(new Date(System.currentTimeMillis()));
-        logMapper.insert(record);
+        logMapper.insertSelective(record);
         LOGGER.info("operation logs inserted by {}.{}()", className, methodName);
         return obj;
     }

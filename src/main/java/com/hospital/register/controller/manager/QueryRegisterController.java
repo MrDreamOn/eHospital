@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hospital.register.annotation.OperateLogs;
 import com.hospital.register.annotation.TokenAccess;
 import com.hospital.register.bean.Bonus;
 import com.hospital.register.bean.BonusDetail;
@@ -60,9 +61,11 @@ public class QueryRegisterController {
      * @param telPhone
      * @return
      */
+    
     @RequestMapping(value = "/queryTelphone", method = RequestMethod.POST)
     @ResponseBody
     @TokenAccess
+    @OperateLogs(operateInfo="查询预约信息")
     public RestResponse queryTelphone(HttpServletRequest request) {
         try{
         String telPhone = request.getParameter("telPhone");
@@ -130,8 +133,10 @@ public class QueryRegisterController {
     * @param userVO
     * @return
     */
+    
     @RequestMapping(value = "/addRegister", method = RequestMethod.POST)
     @ResponseBody
+    @OperateLogs(operateInfo="新增挂号")
     public RestResponse addRegister(String telPhone, String idCard, String name, String status,
                                     int userId, int subId) {
         try {
@@ -223,6 +228,7 @@ public class QueryRegisterController {
     
     @RequestMapping(value = "/updateSubStatus", method = RequestMethod.POST)
     @ResponseBody
+    @OperateLogs(operateInfo="更新预约状态")
     public RestResponse updateSubStatus(HttpServletRequest request){
         String subid = request.getParameter("subid");
         String status = request.getParameter("status");
@@ -280,6 +286,7 @@ public class QueryRegisterController {
     
     @RequestMapping(value = "/querySubscriptionDetail", method = RequestMethod.POST)
     @ResponseBody
+    @OperateLogs(operateInfo="查询预约详情")
     public RestResponse querySubscriptionDetail(int subid){
         SubscriptionExample subExample = new SubscriptionExample();
         Criteria criteria = subExample.createCriteria();

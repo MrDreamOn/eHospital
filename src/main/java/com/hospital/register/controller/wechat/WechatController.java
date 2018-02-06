@@ -2,6 +2,8 @@ package com.hospital.register.controller.wechat;
 
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,16 +16,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hospital.register.bean.User;
+import com.hospital.register.bean.UserExample;
 import com.hospital.register.exception.EhospitalServiceException;
 import com.hospital.register.service.UserService;
 import com.hospital.register.service.WechatService;
+import com.hospital.register.util.HttpRequest;
 import com.hospital.register.util.PasswordHelper;
 import com.hospital.register.util.ResponseCode;
+import com.hospital.register.util.RestResponse;
 import com.hospital.register.vo.WeChatRequestVo;
 
 @Controller
+@RequestMapping(value = "/wechat")
 public class WechatController {
 
     private static final Logger logger = LoggerFactory.getLogger(WechatController.class);
@@ -65,16 +72,32 @@ public class WechatController {
         }
     }
     
-    @RequestMapping(value="/test",method=RequestMethod.GET)
-    public String login() {
-//        User userVO = new User();
-//        userVO.setUserName(defaultUserName);
-//        userVO.setPassword(PasswordHelper.encryptPassword(userVO.getUserName(),defaultPassword));
-//        userVO.setOpenId("caiwe_test");
-//        userVO.setCreateTime(new Date());
-//        userVO.setUpdateTime(new Date());
-//        int isReg = userService.addUser(userVO);
-//        logger.info("请求处理返回数据:{}", isReg);
-        return "login";
+    @RequestMapping(value="/auth",method=RequestMethod.POST)
+    @ResponseBody
+    public RestResponse auth(HttpServletRequest request) {
+        String code = request.getParameter("code");
+        
+        Map<String, String> map = HttpRequest.sendToWechatOAuth(code);
+        String openid = map.get("openid");
+        //String openid = "oVFBl046iFEdU-3zc8kxcW_1xfVE";
+        if(StringUtils.hasText(openid)){
+            UserExample example = new UserExample();
+            example.createCriteria().andOpenIdEqualTo(openid);
+            List<User> list = userService.findUsersByCondition(example);
+            if(list.size() > 0){
+                return RestResponse.successResWithData(list.get(0).getUserId()); 
+            }else{
+                User userVO = new User();
+                userVO.setUserName(defaultUserName);
+                userVO.setPassword(PasswordHelper.encryptPassword(userVO.getUserName(),defaultPassword));
+                userVO.setOpenId(openid);
+                userVO.setCreateTime(new Date());
+                userVO.setUpdateTime(new Date());
+                userService.addUser(userVO);
+                return RestResponse.successResWithData(userVO.getUserId()); 
+            }
+        }else{
+            throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE, "授权失败");
+        }
     }
 }

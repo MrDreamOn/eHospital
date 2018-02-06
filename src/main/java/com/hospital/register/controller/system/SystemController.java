@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hospital.register.bean.Log;
+import com.hospital.register.bean.LogExample;
 import com.hospital.register.bean.SubscriptionExample;
 import com.hospital.register.bean.UserExample;
+import com.hospital.register.conditionVO.LogVO;
 import com.hospital.register.conditionVO.SystemVO;
+import com.hospital.register.dao.LogMapper;
 import com.hospital.register.dao.SubscriptionMapper;
 import com.hospital.register.dao.UserMapper;
 import com.hospital.register.util.DateUtil;
@@ -39,6 +43,9 @@ public class SystemController {
 
     @Autowired
     private SubscriptionMapper  subscriptionMapper;
+    
+    @Autowired
+    private LogMapper           logMapper;
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @ResponseBody
@@ -105,5 +112,28 @@ public class SystemController {
         //5.实际预约数
         vo.setRealCount(vo.getSubCount() - vo.getCancelSubCount());
         return vo;
+    }
+    
+    @RequestMapping(value = "/log", method = RequestMethod.POST)
+    @ResponseBody
+    public RestResponse queryLog(HttpServletRequest request) {
+        LogExample example = new LogExample();
+        example.createCriteria().andCreateTimeGreaterThanOrEqualTo(DateUtil.getMonthBegin(new Date()));
+        List<Log> logList = logMapper.selectByExample(example);
+        
+        return RestResponse.successResWithData(convertVO(logList));
+    }
+    
+    private List<LogVO> convertVO(List<Log> logList){
+        List<LogVO> voList = new ArrayList<LogVO>();
+        for(Log log : logList){
+            LogVO vo = new LogVO();
+            vo.setUserName("admin");
+            vo.setOperateDate(DateUtil.formatDateTime(log.getOperateTime()));
+            vo.setOperateStr(log.getOperateRecord());
+            voList.add(vo);
+        }
+        
+        return voList;
     }
 }

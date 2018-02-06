@@ -85,17 +85,7 @@ public class UserServiceImpl implements UserService{
         if(list.size() ==0 ){
             return false;
         }
-        
-        if(list.size() > 1 ){
-            return false;
-        }
-        
-        User user = list.get(0);
-        if(StringUtils.hasText(user.getRealName())){
-            return true;
-        }
-        
-        return false;
+        return true;
     }
 
     @Override
@@ -106,8 +96,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public int updateUserByPrimaryKey(User user) {
-        return userMapper.updateByPrimaryKey(user);
+    public int updateByPrimaryKeySelective(User user) {
+        return userMapper.updateByPrimaryKeySelective(user);
     }
 
 	@Override

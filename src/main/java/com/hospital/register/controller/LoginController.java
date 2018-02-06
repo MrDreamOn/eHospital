@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
@@ -49,8 +50,10 @@ public class LoginController {
     }
 	
 	@RequestMapping(value="/webAPP",method=RequestMethod.GET)
-    public String webAPP() {
-        logger.info("login");
+    public String webAPP(HttpServletRequest requets) {
+	    
+        logger.info("login:"+requets.getParameter("code"));
+        requets.setAttribute("code", requets.getParameter("code"));
         return "login";
     }
 	

@@ -17,6 +17,8 @@ public class UserVO {
 	private int sex;
 
 	private Date brithday;
+	
+	private String brithdayStr;
 
 	private String status;// 1-预约 2-挂号
 
@@ -132,4 +134,13 @@ public class UserVO {
 		this.createTime = createTime;
 	}
 
+    public String getBrithdayStr() {
+        return brithdayStr;
+    }
+
+    public void setBrithdayStr(String brithdayStr) {
+        this.brithdayStr = brithdayStr;
+    }
+
+	
 }

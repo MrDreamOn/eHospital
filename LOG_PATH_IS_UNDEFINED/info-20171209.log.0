@@ -1,0 +1,1 @@
+2017-12-09 23:58:11.382 [main] INFO  c.h.r.service.impl.WechatServiceImpl -需要返回给微信的message数据是:data={}

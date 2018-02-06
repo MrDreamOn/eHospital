@@ -23,7 +23,7 @@ public class MyControllerAdvice {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public RestResponse errorHandler(Exception ex) {
-        logger.error(ex.getMessage());
+        ex.printStackTrace();
         return RestResponse.errorRes("系统异常");
     }
     

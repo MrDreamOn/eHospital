@@ -123,8 +123,8 @@ public class BonusController {
 			long count = bonusService.countBonusDetail(paramsMap);
 			if(count > 0) {
 				bonusDetailList = bonusService.selectBonusDetail(paramsMap);
+	            resultMap.put("totalPoints", bonusDetailList.get(0).getTotalPoints());
 			}
-			resultMap.put("totalPoints", bonusDetailList.get(0).getTotalPoints());
 			resultMap.put("bonusList", bonusDetailList);
 			return RestResponse.successRes4Find(resultMap, Integer.parseInt(count + ""));
 		} catch (Exception e) {

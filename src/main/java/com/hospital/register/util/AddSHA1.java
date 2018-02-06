@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class AddSHA1 {
 
 	// 与接口配置信息中的Token要一致
-	private static String token = "witon";
+	private static String token = "hospital";
 
 	/**
 	 * 验证微信签名
