@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.druid.util.StringUtils;
 import com.hospital.register.bean.BonusDetail;
 import com.hospital.register.bean.BonusDetailExample;
 import com.hospital.register.bean.User;
@@ -44,9 +43,9 @@ public class BonusController {
 	@ResponseBody
 	RestResponse getBonusByCondition(String condition,Integer currentPage, Integer pageSize) {
 		logger.info("get Bonus info,condition:{},currentPage:{},pageSize:{}", condition,currentPage, pageSize);
-		if(StringUtils.isEmpty(condition)) {
+		/*if(StringUtils.isEmpty(condition)) {
 			return RestResponse.errorRes("用户名或者手机号不能为空");
-		}
+		}*/
 		List<UserBonusVO> userBonusList = new ArrayList<UserBonusVO>();
 		Map<String,Object> paramsMap = new HashMap<String,Object>();
 		try {

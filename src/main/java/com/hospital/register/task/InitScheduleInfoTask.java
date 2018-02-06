@@ -14,8 +14,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.hospital.register.bean.Doctor;
 import com.hospital.register.bean.Schedule;
 import com.hospital.register.bean.ScheduleExample;
+import com.hospital.register.service.DoctorService;
 import com.hospital.register.service.ScheduleService;
 import com.hospital.register.util.DateUtil;
 
@@ -27,6 +29,8 @@ public class InitScheduleInfoTask {
 	@Autowired
 	private ScheduleService scheduleService;
 	
+	@Autowired
+	private DoctorService doctorService;
 	
 	@Scheduled(cron = "${schedule.init.schedulded:0 30 23 * * ?}")
 	public void initHandler() throws Exception {
@@ -56,36 +60,39 @@ public class InitScheduleInfoTask {
 		List<Schedule> schedules = new ArrayList<Schedule>();
 		Date clinicDateNew =DateUtil.getAfterDay(clinicDate);
 		int dayOfWeek = DateUtil.dayForWeek(clinicDateNew);
-		Schedule schedule = new Schedule();
-		schedule.setHospitalId(1);
-		schedule.setDoctorId(1);
-		schedule.setDepartmentId(1);
-		schedule.setClinicDate(clinicDateNew);
-		schedule.setClinicTime("上午");
-		schedule.setClinicWeek(dayOfWeek);
-		schedule.setClinicType(1);
-		schedule.setClinicStatus(1);
-		schedule.setClinicNo(10);
-		schedule.setClinicFee(new BigDecimal(10));
-		schedule.setCreateTime(new Date());
-		schedule.setUpdateTime(new Date());
-		
-		Schedule schedule2 = new Schedule();
-		schedule2.setHospitalId(1);
-		schedule2.setDoctorId(1);
-		schedule2.setDepartmentId(1);
-		schedule2.setClinicDate(clinicDateNew);
-		schedule2.setClinicTime("下午");
-		schedule2.setClinicWeek(dayOfWeek);
-		schedule2.setClinicType(1);
-		schedule2.setClinicStatus(1);
-		schedule2.setClinicNo(10);
-		schedule2.setClinicFee(new BigDecimal(10));
-		schedule2.setCreateTime(new Date());
-		schedule2.setUpdateTime(new Date());
-		
-		schedules.add(schedule);
-		schedules.add(schedule2);
+		List<Doctor> doctors = doctorService.queryAllDoctor();
+		for (Doctor item : doctors) {
+			Schedule schedule = new Schedule();
+			schedule.setHospitalId(1);
+			schedule.setDoctorId(item.getDoctorId());
+			schedule.setDepartmentId(1);
+			schedule.setClinicDate(clinicDateNew);
+			schedule.setClinicTime("上午");
+			schedule.setClinicWeek(dayOfWeek);
+			schedule.setClinicType(1);
+			schedule.setClinicStatus(1);
+			schedule.setClinicNo(10);
+			schedule.setClinicFee(new BigDecimal(10));
+			schedule.setCreateTime(new Date());
+			schedule.setUpdateTime(new Date());
+			
+			Schedule schedule2 = new Schedule();
+			schedule2.setHospitalId(1);
+			schedule2.setDoctorId(item.getDoctorId());
+			schedule2.setDepartmentId(1);
+			schedule2.setClinicDate(clinicDateNew);
+			schedule2.setClinicTime("下午");
+			schedule2.setClinicWeek(dayOfWeek);
+			schedule2.setClinicType(1);
+			schedule2.setClinicStatus(1);
+			schedule2.setClinicNo(10);
+			schedule2.setClinicFee(new BigDecimal(10));
+			schedule2.setCreateTime(new Date());
+			schedule2.setUpdateTime(new Date());
+			
+			schedules.add(schedule);
+			schedules.add(schedule2);
+		}
 		return schedules;
 	}
 	

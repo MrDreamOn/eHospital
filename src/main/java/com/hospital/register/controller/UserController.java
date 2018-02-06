@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.druid.util.StringUtils;
 import com.hospital.register.annotation.OperateLogs;
 import com.hospital.register.bean.Subscription;
 import com.hospital.register.bean.SubscriptionExample;
@@ -102,9 +101,9 @@ public class UserController {
 	@OperateLogs(operateInfo="查询用户信息")
 	RestResponse getUser(String condition,Integer currentPage, Integer pageSize) {
 		logger.info("getUser info,condition:{},currentPage:{},pageSize:{}", condition,currentPage, pageSize);
-		if(StringUtils.isEmpty(condition)) {
+		/*if(StringUtils.isEmpty(condition)) {
 			return RestResponse.errorRes("用户名或者手机号不能为空");
-		}
+		}*/
 		List<UserVO> resultList = new ArrayList<UserVO>();
 		UserExample example = new UserExample();
 		try {
@@ -112,7 +111,7 @@ public class UserController {
 			if(PhoneFormatCheckUtils.isPhoneLegal(condition)) {
 				example.createCriteria().andTelephoneEqualTo(condition);
 			}else {
-				example.createCriteria().andRealNameEqualTo(condition);
+				example.createCriteria().andRealNameLike("%"+condition+"%");
 			}
 			long count = userService.countUsers(example);
 			if(count > 0) {

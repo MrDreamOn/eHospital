@@ -12,6 +12,8 @@ public class ScheduleView implements Serializable {
 	
 	private Date clinicDate;
 	
+	private int doctorId;
+	
 	private String doctorName;
 	
 	private String clinicTimeMorning;
@@ -81,5 +83,13 @@ public class ScheduleView implements Serializable {
 	}
 	
 	public ScheduleView() {
+	}
+
+	public int getDoctorId() {
+		return doctorId;
+	}
+
+	public void setDoctorId(int doctorId) {
+		this.doctorId = doctorId;
 	}
 }

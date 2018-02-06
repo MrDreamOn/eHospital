@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -105,8 +106,10 @@ public class SubscriptionController {
 	@ResponseBody
 	public RestResponse querySubscription(HttpServletRequest request) {
 		ScheduleExample examples = new ScheduleExample();
+		//根据doctorId获取排班信息
+		String doctorId = request.getParameter("doctorId");
 		Criteria criteria = examples.createCriteria();
-		criteria.andClinicDateBetween(DateUtil.getNotToday(new Date(), 1), DateUtil.getNotToday(new Date(), 7));
+		criteria.andDoctorIdEqualTo(StringUtils.isEmpty(doctorId)? 0 :Integer.parseInt(doctorId)).andClinicDateBetween(DateUtil.getNotToday(new Date(), 1), DateUtil.getNotToday(new Date(), 7));
 		examples.setOrderByClause("clinic_date,clinic_time");
 		List<Schedule> listSch = scheduleService.getScheduleInfo(examples);
 		List<ScheduleVO> listVO = new ArrayList<ScheduleVO>();
@@ -165,10 +168,10 @@ public class SubscriptionController {
 		user.setAge(idcardInfoExtractor.getAge() + "");
 		// }
 		SubscriptionExample exampleSub = new SubscriptionExample();
-		com.hospital.register.bean.SubscriptionExample.Criteria criteria = exampleSub.createCriteria();
-		criteria.andScheduleIdEqualTo(Integer.parseInt(scheduleId));
-		criteria.andUserIdEqualTo(user2.getUserId());
-		criteria.andSubscriptionStatusNotEqualTo(4);
+		exampleSub.createCriteria()
+		.andScheduleIdEqualTo(Integer.parseInt(scheduleId))
+		.andUserIdEqualTo(user2.getUserId())
+		.andSubscriptionStatusNotEqualTo(4);
 		List<Subscription> listsub = subscriptionService.querySubscription(exampleSub);
 		if (listsub.isEmpty()) {
 //	        user2.setRealName(user.getRealName());

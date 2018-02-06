@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hospital.register.annotation.OperateLogs;
+import com.hospital.register.bean.Doctor;
 import com.hospital.register.bean.Schedule;
 import com.hospital.register.bean.ScheduleExample;
+import com.hospital.register.service.DoctorService;
 import com.hospital.register.service.ScheduleService;
 import com.hospital.register.util.DateUtil;
 import com.hospital.register.util.RestResponse;
@@ -32,6 +34,9 @@ public class ScheduleController {
 
 	@Autowired
 	private ScheduleService scheduleService;
+	
+	@Autowired
+	private DoctorService doctorService;
 
 	@RequestMapping(value = "/schedules", method = RequestMethod.POST)
 	@ResponseBody
@@ -52,9 +57,10 @@ public class ScheduleController {
 		logger.info("getSchedule info,currentPage:{},pageSize:{}", currentPage, pageSize);
 		List<ScheduleView> resultList = new ArrayList<ScheduleView>();
 		ScheduleExample examples = new ScheduleExample();
+		Long startTime = System.currentTimeMillis();
 		try {
 			examples.createCriteria().andClinicDateBetween(DateUtil.formatDateToDate(new Date()),
-					DateUtil.getCurBeforDate(-5));
+					DateUtil.getCurBeforDate(-30));
 			long count = scheduleService.countSchedule(examples);
 			if (count > 0) {
 				List<Schedule> schedules = scheduleService.getScheduleInfoByPage(examples, currentPage, pageSize);
@@ -65,23 +71,32 @@ public class ScheduleController {
 		} catch (Exception e) {
 			logger.error("查询排班信息出错,e={}", e);
 			return RestResponse.errorRes("查询排班信息出错");
+		}finally {
+			Long endTime = System.currentTimeMillis();
+			logger.info("耗时:[{}ms]", endTime - startTime);
 		}
 	}
 
 	private List<ScheduleView> wapperScheduleView(List<Schedule> schedules) {
 		List<ScheduleView> resultList = new ArrayList<ScheduleView>();
-		Map<Long,ScheduleView> scheduleMap = new HashMap<Long,ScheduleView>();
+		Map<String,ScheduleView> scheduleMap = new HashMap<String,ScheduleView>();
+		Map<Integer,Doctor> doctorMap = new HashMap<Integer,Doctor>();
+		List<Doctor> doctors = doctorService.queryAllDoctor();
+		for(Doctor item : doctors) {
+			doctorMap.put(item.getDoctorId(), item);
+		}
 		for (Schedule item : schedules) {
-			long longKey = item.getClinicDate().getTime();
+			String scheduleKey = item.getClinicDate().getTime()+"_"+item.getDoctorId();
 			ScheduleView vo = null;
-			if(scheduleMap.containsKey(longKey)) {
-				vo = scheduleMap.get(longKey);
+			if(scheduleMap.containsKey(scheduleKey)) {
+				vo = scheduleMap.get(scheduleKey);
 			}else {
 				vo = new ScheduleView();
 			}
 			
 			vo.setClinicDate(item.getClinicDate());
-			vo.setDoctorName("朱自清");
+			vo.setDoctorId(item.getDoctorId());
+			vo.setDoctorName(doctorMap.get(item.getDoctorId()).getDoctorName());
 			vo.setClinicTimeMorning("09:00 ~ 11:30");
 			vo.setClinicTimeAfternoon("13:00 ~ 17:00");
 			if(StringUtils.equals("上午", item.getClinicTime())) {
@@ -90,7 +105,7 @@ public class ScheduleController {
 				vo.setAfternoonLeft(item.getClinicNo()+"");
 			}
 			vo.setClinicStatus(item.getClinicStatus() == 0 ? false : true);
-			scheduleMap.put(longKey, vo);
+			scheduleMap.put(scheduleKey, vo);
 		}
 		resultList.addAll(scheduleMap.values());
 		Collections.sort(resultList,new Comparator<ScheduleView>() {
@@ -105,8 +120,8 @@ public class ScheduleController {
 	@RequestMapping(value = "/updateSchedule", method = RequestMethod.POST)
 	@ResponseBody
 	@OperateLogs(operateInfo="更新排班信息")
-	public RestResponse updateSchedule(long clinicDate, boolean clinicStatus) {
-		logger.info("updateSchedule info,clinicDate:{},status:{}", clinicDate, clinicStatus);
+	public RestResponse updateSchedule(long clinicDate,int doctorId, boolean clinicStatus) {
+		logger.info("updateSchedule info,clinicDate:{},doctorId:{},status:{}", clinicDate, doctorId,clinicStatus);
 		int intClinicStatus = 0;
 		int tmpClinicStatus = 1;
 		String resultInfo = "已停诊";
@@ -117,7 +132,7 @@ public class ScheduleController {
 		}
 		ScheduleExample examples = new ScheduleExample();
 		try {
-			examples.createCriteria().andClinicDateEqualTo(new Date(clinicDate))
+			examples.createCriteria().andClinicDateEqualTo(new Date(clinicDate)).andDoctorIdEqualTo(doctorId)
 					.andClinicStatusEqualTo(tmpClinicStatus);
 			Schedule schedule = new Schedule();
 			schedule.setClinicStatus(intClinicStatus);
