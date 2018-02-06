@@ -127,7 +127,6 @@ public class BonusController {
 				totalPoints = bonusDetailList.get(0).getTotalPoints();
 			}
 			resultMap.put("totalPoints", totalPoints);
-			}
 			resultMap.put("bonusList", bonusDetailList);
 			return RestResponse.successRes4Find(resultMap, Integer.parseInt(count + ""));
 		} catch (Exception e) {
