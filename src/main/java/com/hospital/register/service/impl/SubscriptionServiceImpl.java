@@ -2,6 +2,7 @@ package com.hospital.register.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,6 @@ import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.PageHelper;
 import com.hospital.register.bean.Bonus;
-import com.hospital.register.bean.BonusExample;
 import com.hospital.register.bean.Schedule;
 import com.hospital.register.bean.ScheduleExample;
 import com.hospital.register.bean.Subscription;
@@ -24,7 +24,6 @@ import com.hospital.register.dao.BonusMapper;
 import com.hospital.register.dao.ScheduleMapper;
 import com.hospital.register.dao.SubscriptionMapper;
 import com.hospital.register.exception.EhospitalServiceException;
-import com.hospital.register.service.BonusService;
 import com.hospital.register.service.ScheduleService;
 import com.hospital.register.service.SubscriptionService;
 import com.hospital.register.service.UserService;
@@ -298,5 +297,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public long countSubsciption(SubscriptionExample example) {
 		return subscriptionMapper.countByExample(example);
+	}
+
+	@Override
+	public long countSubsciptionByMap(Map<String, Object> paramsMap) {
+		return subscriptionMapper.countByMap(paramsMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> querySubscriptionByMap(Map<String, Object> paramsMap) {
+		int currentPage = 0;
+		int pageSize = 100;
+		if(paramsMap.containsKey("currentPage")){
+			currentPage = (int)paramsMap.get("currentPage");
+		}
+		if(paramsMap.containsKey("pageSize")){
+			pageSize = (int)paramsMap.get("pageSize");
+		}
+		PageHelper.startPage(currentPage, pageSize);
+		return subscriptionMapper.selectByMap(paramsMap);
 	}
 }

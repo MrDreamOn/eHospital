@@ -108,8 +108,11 @@ public class SubscriptionController {
 		ScheduleExample examples = new ScheduleExample();
 		//根据doctorId获取排班信息
 		String doctorId = request.getParameter("doctorId");
+		//String doctorId = "1";
 		Criteria criteria = examples.createCriteria();
-		criteria.andDoctorIdEqualTo(StringUtils.isEmpty(doctorId)? 0 :Integer.parseInt(doctorId)).andClinicDateBetween(DateUtil.getNotToday(new Date(), 1), DateUtil.getNotToday(new Date(), 7));
+		criteria.andDoctorIdEqualTo(StringUtils.isEmpty(doctorId)? 0 :Integer.parseInt(doctorId))
+		.andClinicDateBetween(DateUtil.getNotToday(new Date(), 1), DateUtil.getNotToday(new Date(), 7))
+		.andClinicStatusEqualTo(1);
 		examples.setOrderByClause("clinic_date,clinic_time");
 		List<Schedule> listSch = scheduleService.getScheduleInfo(examples);
 		List<ScheduleVO> listVO = new ArrayList<ScheduleVO>();
@@ -130,6 +133,7 @@ public class SubscriptionController {
 	@ResponseBody
 	public RestResponse queryUser(HttpServletRequest request) {
 		String userId = request.getParameter("userId");
+		//String userId = "31";
 		UserExample example = new UserExample();
 		example.createCriteria().andUserIdEqualTo(Integer.parseInt(userId));
 		List<User> list = userService.findUsersByCondition(example);
@@ -144,6 +148,7 @@ public class SubscriptionController {
 	@ResponseBody
 	public RestResponse checkSubInfo(HttpServletRequest request) {
 		String userId = request.getParameter("userId");
+		//String userId = "31";
 		//String openId = "test_01_02";
 		String name = request.getParameter("name");
 		String idCard = request.getParameter("idCard");

@@ -413,4 +413,46 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where subscription_id = #{subscriptionId,jdbcType=INTEGER}
   </update>
+  
+  <select id="countByMap" resultType="java.lang.Long" parameterType="java.util.HashMap">
+  	select count(*) from t_subscription t1 
+  	INNER JOIN t_schedule t2 on t1.schedule_id = t2.schedule_id 
+  	INNER JOIN t_doctor t3 on t2.doctor_id = t3.doctor_id where 1=1
+  	<if test="doctorId != null">
+  		and t3.doctor_id = #{doctorId,jdbcType=INTEGER}
+  	</if>
+  	<if test="telPhone != null">
+  		and t1.patient_phone = #{telPhone,jdbcType=VARCHAR}
+  	</if>
+  	<if test="startCreateDate != null and endCreateDate != null">
+  		<![CDATA[ and t1.create_time >= #{startCreateDate,jdbcType=TIMESTAMP} and t1.create_time <= #{endCreateDate,jdbcType=TIMESTAMP} ]]>
+  	</if>
+  	<if test="startSubscriptionDate != null and endSubscriptionDate != null">
+  		<![CDATA[ and t1.subscription_date >= #{startSubscriptionDate,jdbcType=DATE} and t1.subscription_date <= #{endSubscriptionDate,jdbcType=DATE} ]]>
+  	</if>
+  	<if test="subscriptionStatus != null">
+  		and t1.subscription_status = #{subscriptionStatus,jdbcType=INTEGER}
+  	</if>
+  </select>
+  <select id="selectByMap" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+  	select t1.subscription_id,t1.patient_name,t1.patient_phone,t1.subscription_date,
+  	t1.create_time,t3.doctor_name from t_subscription t1 
+  	INNER JOIN t_schedule t2 on t1.schedule_id = t2.schedule_id 
+  	INNER JOIN t_doctor t3 on t2.doctor_id = t3.doctor_id where 1=1
+  	<if test="doctorId != null">
+  		and t3.doctor_id = #{doctorId,jdbcType=INTEGER}
+  	</if>
+  	<if test="telPhone != null">
+  		and t1.patient_phone = #{telPhone,jdbcType=VARCHAR}
+  	</if>
+  	<if test="startCreateDate != null and endCreateDate != null">
+  		<![CDATA[ and t1.create_time >= #{startCreateDate,jdbcType=TIMESTAMP} and t1.create_time <= #{endCreateDate,jdbcType=TIMESTAMP} ]]>
+  	</if>
+  	<if test="startSubscriptionDate != null and endSubscriptionDate != null">
+  		<![CDATA[ and t1.subscription_date >= #{startSubscriptionDate,jdbcType=DATE} and t1.subscription_date <= #{endSubscriptionDate,jdbcType=DATE} ]]>
+  	</if>
+  	<if test="subscriptionStatus != null">
+  		and t1.subscription_status = #{subscriptionStatus,jdbcType=INTEGER}
+  	</if>
+  </select>
 </mapper>

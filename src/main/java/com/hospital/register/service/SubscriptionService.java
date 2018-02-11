@@ -1,6 +1,7 @@
 package com.hospital.register.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hospital.register.bean.Subscription;
 import com.hospital.register.bean.SubscriptionExample;
@@ -32,4 +33,8 @@ public interface SubscriptionService {
     public int cancleSubscription(String subcriptionId);
     
     public long countSubsciption(SubscriptionExample example);
+    
+    public long countSubsciptionByMap(Map<String,Object> paramsMap);
+    
+    public List<Map<String,Object>> querySubscriptionByMap(Map<String,Object> paramsMap);
 }

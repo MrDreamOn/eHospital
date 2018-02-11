@@ -56,7 +56,7 @@ public class BonusServiceImpl implements BonusService {
     @Override
     public List<Bonus> queryBonusByCondition(Bonus bonus) {
         BonusExample bex = new BonusExample();
-        bex.createCriteria().andBonusIdEqualTo(bonus.getUserId());
+        bex.createCriteria().andUserIdEqualTo(bonus.getUserId());
         return bonusMapper.selectByExample(bex);
     }
 

@@ -15,6 +15,14 @@ public class SubscriptionView implements Serializable {
 	private String subscriptionId;
 
 	private Date createTime;
+	
+	private String doctorName;
+	
+	private String patientName;
+	
+	private Date subscriptionDate;
+	
+	private String patientPhone;
 
 	private long subscriptionFee;
 
@@ -23,6 +31,38 @@ public class SubscriptionView implements Serializable {
 	private Integer subscriptionStatus;
 
 	private String statusStr;
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+
+	public String getPatientName() {
+		return patientName;
+	}
+
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
+	}
+
+	public Date getSubscriptionDate() {
+		return subscriptionDate;
+	}
+
+	public void setSubscriptionDate(Date subscriptionDate) {
+		this.subscriptionDate = subscriptionDate;
+	}
+
+	public String getPatientPhone() {
+		return patientPhone;
+	}
+
+	public void setPatientPhone(String patientPhone) {
+		this.patientPhone = patientPhone;
+	}
 
 	public String getSubscriptionId() {
 		return subscriptionId;
@@ -61,10 +101,16 @@ public class SubscriptionView implements Serializable {
 			case "2":
 				this.subscriptionSource = "现场挂号";
 				break;
+			case "wechat":
+				this.subscriptionSource = "微信预约";
+				break;
 			default:
+				this.subscriptionSource = "现场挂号";
 				break;
 			}
 			
+		}else {
+			this.subscriptionSource = "现场挂号";
 		}
 	}
 

@@ -1,9 +1,12 @@
 package com.hospital.register.dao;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.hospital.register.bean.Subscription;
 import com.hospital.register.bean.SubscriptionExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface SubscriptionMapper {
 
@@ -72,5 +75,9 @@ public interface SubscriptionMapper {
 	 * @mbg.generated
 	 */
 	int updateByPrimaryKey(Subscription record);
+
+	List<Map<String, Object>> selectByMap(Map<String, Object> paramsMap);
+	
+	long countByMap(Map<String, Object> paramsMap);
 	
 }
