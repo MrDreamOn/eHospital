@@ -46,9 +46,13 @@ public class DoctorController {
 		String docSummery = request.getParameter("docSummery");
 
 		String docHonor = request.getParameter("docHonor");
+		
+		String doctorId = request.getParameter("doctorId");
+		
+		int docId = StringUtils.isEmpty(doctorId)? 1 :Integer.parseInt(doctorId);
 
 		Doctor doc = new Doctor();
-		doc.setDoctorId(1);
+		doc.setDoctorId(docId);
 		doc.setPositionName(docPosition);
 		doc.setDoctorSummary(docSummery);
 		doc.setDoctorHonor(docHonor);
