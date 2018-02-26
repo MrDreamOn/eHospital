@@ -1,5 +1,6 @@
 package com.hospital.register.controller.manager;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -249,6 +250,7 @@ public class QueryRegisterController {
 				view.setPatientName((String) map.get("patient_name"));
 				view.setPatientPhone((String) map.get("patient_phone"));
 				view.setSubscriptionDate((Date) map.get("subscription_date"));
+				view.setSettleAmount(map.get("settle_amount") == null ? BigDecimal.ZERO : (BigDecimal) map.get("settle_amount"));
 				resultList.add(view);
 			}
 		}

@@ -417,7 +417,8 @@
   <select id="countByMap" resultType="java.lang.Long" parameterType="java.util.HashMap">
   	select count(*) from t_subscription t1 
   	INNER JOIN t_schedule t2 on t1.schedule_id = t2.schedule_id 
-  	INNER JOIN t_doctor t3 on t2.doctor_id = t3.doctor_id where 1=1
+  	INNER JOIN t_doctor t3 on t2.doctor_id = t3.doctor_id 
+  	LEFT JOIN t_bonus_detail t4 on t1.subscription_id = t4.subscription_id where 1=1
   	<if test="doctorId != null">
   		and t3.doctor_id = #{doctorId,jdbcType=INTEGER}
   	</if>
@@ -436,9 +437,10 @@
   </select>
   <select id="selectByMap" resultType="java.util.HashMap" parameterType="java.util.HashMap">
   	select t1.subscription_id,t1.patient_name,t1.patient_phone,t1.subscription_date,
-  	t1.create_time,t3.doctor_name from t_subscription t1 
+  	t1.create_time,t3.doctor_name,t4.settle_amount from t_subscription t1 
   	INNER JOIN t_schedule t2 on t1.schedule_id = t2.schedule_id 
-  	INNER JOIN t_doctor t3 on t2.doctor_id = t3.doctor_id where 1=1
+  	INNER JOIN t_doctor t3 on t2.doctor_id = t3.doctor_id 
+  	LEFT JOIN t_bonus_detail t4 on t1.subscription_id = t4.subscription_id where 1=1
   	<if test="doctorId != null">
   		and t3.doctor_id = #{doctorId,jdbcType=INTEGER}
   	</if>

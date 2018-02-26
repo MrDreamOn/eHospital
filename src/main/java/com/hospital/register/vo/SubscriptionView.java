@@ -1,6 +1,7 @@
 package com.hospital.register.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.alibaba.druid.util.StringUtils;
@@ -31,6 +32,8 @@ public class SubscriptionView implements Serializable {
 	private Integer subscriptionStatus;
 
 	private String statusStr;
+	
+	private BigDecimal settleAmount; 
 
 	public String getDoctorName() {
 		return doctorName;
@@ -147,6 +150,14 @@ public class SubscriptionView implements Serializable {
 
 	public void setStatusStr(String statusStr) {
 		this.statusStr = statusStr;
+	}
+
+	public BigDecimal getSettleAmount() {
+		return settleAmount;
+	}
+
+	public void setSettleAmount(BigDecimal settleAmount) {
+		this.settleAmount = settleAmount;
 	}
 
 }
