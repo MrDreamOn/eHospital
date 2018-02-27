@@ -14,6 +14,8 @@ import com.hospital.register.util.DateUtil;
  */
 public class RegisterVO extends BaseVO {
 
+	private String 		 doctorName;  //预约坐诊医生姓名
+
     private String       telphone;    //手机号
 
     private String       startDate;   //就诊开始时间
@@ -125,7 +127,11 @@ public class RegisterVO extends BaseVO {
         this.clinicTime = clinicTime;
     }
 
-    
-    
-    
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
 }

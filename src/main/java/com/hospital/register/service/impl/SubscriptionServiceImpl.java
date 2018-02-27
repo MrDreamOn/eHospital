@@ -144,7 +144,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void addUserAndSubscription(UserVO userVO) {
+    public void addUserAndSubscription(UserVO userVO, String doctorId) {
         User user = new User();
         user.setBirthday(userVO.getBrithday());
         user.setUserName("游客");
@@ -161,7 +161,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 "会员创建失败");
         }
         ScheduleExample examples = new ScheduleExample();
-        examples.createCriteria().andClinicDateEqualTo(DateUtil.formatDateToDate(new Date()));
+        examples.createCriteria().andDoctorIdEqualTo(Integer.parseInt(doctorId)).andClinicNoGreaterThanOrEqualTo(1).andClinicDateEqualTo(DateUtil.formatDateToDate(new Date()));
         List<Schedule> schList = scheduleService.getScheduleInfo(examples);
         if (schList.size() == 0) {
             throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE,
@@ -190,6 +190,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE,
                 "挂号失败，请稍后再试");
         }
+        scheduleMapper.updateScheduleNo(sch.getScheduleId());
+        
         
         //插入bounds总表
         
@@ -203,7 +205,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void userAddSubscription(UserVO userVO) {
+    public void userAddSubscription(UserVO userVO, String doctorId) {
         User user = new User();
         UserExample uExamples = new UserExample();
         uExamples.createCriteria().andUserIdEqualTo(userVO.getUserId());
@@ -211,11 +213,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (userList.size() == 0) {
             throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE,
                 "用户信息异常");
-
         }
         user = userList.get(0);
         ScheduleExample examples = new ScheduleExample();
-        examples.createCriteria().andClinicDateEqualTo(DateUtil.formatDateToDate(new Date()));
+        examples.createCriteria().andDoctorIdEqualTo(Integer.parseInt(doctorId)).andClinicNoGreaterThanOrEqualTo(1).andClinicDateEqualTo(DateUtil.formatDateToDate(new Date()));
         List<Schedule> schList = scheduleService.getScheduleInfo(examples);
         if (schList.size() == 0) {
             throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE,
@@ -244,6 +245,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE,
                 "挂号失败，请稍后再试");
         }
+        
+        scheduleMapper.updateScheduleNo(sch.getScheduleId());
     }
 
     @Override
@@ -251,7 +254,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SubscriptionExample example = new SubscriptionExample();
         example.createCriteria().andSubscriptionIdEqualTo(userVO.getSubscriptionId());
         Subscription sub = new Subscription();
-        sub.setSubscriptionStatus(2);
+        sub.setSubscriptionStatus(1);
         int subResult = subscriptionMapper.updateByExampleSelective(sub, example);
         if (subResult == 0) {
             throw new EhospitalServiceException(ResponseCode.RESPONSE_COMMON_ERROR_MESSAGE,

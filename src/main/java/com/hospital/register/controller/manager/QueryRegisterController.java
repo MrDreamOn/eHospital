@@ -22,6 +22,7 @@ import com.hospital.register.annotation.OperateLogs;
 import com.hospital.register.annotation.TokenAccess;
 import com.hospital.register.bean.Bonus;
 import com.hospital.register.bean.BonusDetail;
+import com.hospital.register.bean.Doctor;
 import com.hospital.register.bean.Schedule;
 import com.hospital.register.bean.ScheduleExample;
 import com.hospital.register.bean.Subscription;
@@ -33,6 +34,7 @@ import com.hospital.register.conditionVO.RegisterVO;
 import com.hospital.register.conditionVO.UserVO;
 import com.hospital.register.exception.EhospitalServiceException;
 import com.hospital.register.service.BonusService;
+import com.hospital.register.service.DoctorService;
 import com.hospital.register.service.ScheduleService;
 import com.hospital.register.service.SubscriptionService;
 import com.hospital.register.service.UserService;
@@ -59,6 +61,9 @@ public class QueryRegisterController {
 
 	@Autowired
 	private BonusService bonusService;
+	
+	@Autowired
+	private DoctorService doctorService;
 
 	/**
 	 * 根据手机号判断是否是会员
@@ -113,6 +118,8 @@ public class QueryRegisterController {
 							+ DateUtil.getWeekByDate(sch.getClinicWeek()) + " 上午 10:00-12:00");
 					vo.setCreateTime(DateUtil.formatDateTime(sublist2.get(0).getUpdateTime()));
 					vo.setSubscription(sublist2.get(0));
+					Doctor doctor = doctorService.getDoctorByPrimaryKey(sch.getDoctorId());
+					vo.setDoctorName(doctor.getDoctorName());
 					return RestResponse.successResWithTokenData(vo, "YGdykliy_+@124LK/");
 
 				}
@@ -125,6 +132,8 @@ public class QueryRegisterController {
 			vo.setClinicTime(DateUtil.formatDate(sch.getClinicDate()) + " "
 					+ DateUtil.getWeekByDate(sch.getClinicWeek()) + " 上午 10:00-12:00");
 			vo.setCreateTime(DateUtil.formatDateTime(sublist.get(0).getCreateTime()));
+			Doctor doctor = doctorService.getDoctorByPrimaryKey(sch.getDoctorId());
+			vo.setDoctorName(doctor.getDoctorName());
 			return RestResponse.successResWithTokenData(vo, "YGdykliy_+@124LK/");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -142,7 +151,7 @@ public class QueryRegisterController {
 	@RequestMapping(value = "/addRegister", method = RequestMethod.POST)
 	@ResponseBody
 	@OperateLogs(operateInfo = "新增挂号")
-	public RestResponse addRegister(String telPhone, String idCard, String name, String status, int userId, int subId) {
+	public RestResponse addRegister(String telPhone, String idCard, String name, String status, int userId, int subId,String doctorId) {
 		try {
 			UserVO userVO = new UserVO();
 			IdcardValidator idcardValidator = new IdcardValidator();
@@ -160,11 +169,17 @@ public class QueryRegisterController {
 				userVO.setUserId(userId);
 			}
 			if ("1".equals(status)) {
-				subscriptionService.addUserAndSubscription(userVO);
+				if(StringUtils.isEmpty(doctorId)) {
+					return RestResponse.errorRes("请选择坐诊医生");
+				}
+				subscriptionService.addUserAndSubscription(userVO,doctorId);
 			}
 
 			if ("2".equals(status)) {
-				subscriptionService.userAddSubscription(userVO);
+				if(StringUtils.isEmpty(doctorId)) {
+					return RestResponse.errorRes("请选择坐诊医生");
+				}
+				subscriptionService.userAddSubscription(userVO,doctorId);
 			}
 
 			if ("3".equals(status)) {
@@ -330,6 +345,11 @@ public class QueryRegisterController {
 			vo.setClinicTime(DateUtil.formatDate(sublist.get(0).getSubscriptionDate()) + " "
 					+ sublist.get(0).getSubscriptionTime());
 			vo.setCreateTime(DateUtil.formatDateTime(sublist.get(0).getUpdateTime()));
+			ScheduleExample schExample = new ScheduleExample();
+			schExample.createCriteria().andScheduleIdEqualTo(sublist.get(0).getScheduleId());
+			Schedule sch = scheduleService.getScheduleInfo(schExample).get(0);
+			Doctor doctor = doctorService.getDoctorByPrimaryKey(sch.getDoctorId());
+			vo.setDoctorName(doctor.getDoctorName());
 			return RestResponse.successResWithTokenData(vo, "YGdykliy_+@124LK/");
 		}
 		return RestResponse.successResWithTokenData(new RegisterVO(), "YGdykliy_+@124LK/");

@@ -18,10 +18,10 @@ public interface SubscriptionService {
     public List<Subscription>  querySubscription(SubscriptionExample  example);
     
     //新增会员并当天挂号
-    public void addUserAndSubscription(UserVO userVO);
+    public void addUserAndSubscription(UserVO userVO, String doctorId);
     
     //会员当天挂号
-    public void userAddSubscription(UserVO userVO);
+    public void userAddSubscription(UserVO userVO, String doctorId);
     
     //预约转挂号
     public void updateSubscription(UserVO userVO);
